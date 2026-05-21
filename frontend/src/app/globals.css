@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-hover-bg: var(--hover-bg);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --background: #FFFFFF;
+  --foreground: #0F1419;
+  --muted: #536471;
+  --border: #EFF3F4;
+  --accent: #1D9BF0;
+  --accent-hover: #1A8CD8;
+  --hover-bg: rgba(15, 20, 25, 0.1);
+}
+
+:root.dark, [data-theme="dark"] {
+  --background: #000000;
+  --foreground: #E7E9EA;
+  --muted: #71767B;
+  --border: #2F3336;
+  --hover-bg: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.x-border {
+  border-color: var(--border);
+}
+
+.x-hover {
+  transition: background-color 0.2s ease;
+}
+
+.x-hover:hover {
+  background-color: var(--hover-bg);
+}
+
+.x-btn-primary {
+  background-color: var(--accent);
+  color: #fff;
+  border-radius: 9999px;
+  font-weight: 700;
+  transition: background-color 0.2s;
+}
+
+.x-btn-primary:hover {
+  background-color: var(--accent-hover);
+}
+
+/* Hide Next.js Development Indicators */
+nextjs-portal { display: none !important; }
+

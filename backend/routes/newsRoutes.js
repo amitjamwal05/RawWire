@@ -1,0 +1,51 @@
+const express = require('express');
+const router = express.Router();
+const News = require('../models/News');
+const Analytics = require('../models/Analytics');
+
+// Get all news
+router.get('/', async (req, res) => {
+  try {
+    const news = await News.find().sort({ createdAt: -1 });
+    res.json(news);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get single news
+router.get('/:id', async (req, res) => {
+  try {
+    const news = await News.findById(req.params.id);
+    if (!news) return res.status(404).json({ message: 'News not found' });
+    res.json(news);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Increment views
+router.post('/view/:id', async (req, res) => {
+  try {
+    const news = await News.findById(req.params.id);
+    if (!news) return res.status(404).json({ message: 'News not found' });
+    
+    news.views += 1;
+    await news.save();
+
+    const today = new Date().toISOString().split('T')[0];
+    let analytics = await Analytics.findOne({ date: today });
+    if (!analytics) {
+      analytics = new Analytics({ date: today, totalViews: 1 });
+    } else {
+      analytics.totalViews += 1;
+    }
+    await analytics.save();
+
+    res.json({ success: true, views: news.views, dailyTotal: analytics.totalViews });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+module.exports = router;
