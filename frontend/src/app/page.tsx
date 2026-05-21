@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import NewsCard from '@/components/NewsCard';
+import { getApiUrl } from '@/lib/api';
 
 async function getNews() {
   try {
-    const res = await fetch('http://localhost:5000/api/news', { cache: 'no-store' });
+    const res = await fetch(`${getApiUrl()}/news`, { cache: 'no-store' });
     if (!res.ok) return [];
     return res.json();
   } catch (err) {

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Trash2, Edit, Plus, LogOut } from 'lucide-react';
+import { getApiUrl } from '@/lib/api';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<any>(null);
@@ -15,7 +16,7 @@ export default function AdminDashboard() {
       return;
     }
 
-    fetch(`http://${window.location.hostname}:5000/api/admin/analytics`, {
+    fetch(`${getApiUrl()}/admin/analytics`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => {
@@ -32,7 +33,7 @@ export default function AdminDashboard() {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this post?')) return;
     const token = localStorage.getItem('adminToken');
-    await fetch(`http://${window.location.hostname}:5000/api/admin/news/${id}`, {
+    await fetch(`${getApiUrl()}/admin/news/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
     });

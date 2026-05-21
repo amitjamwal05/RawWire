@@ -6,10 +6,11 @@ import { MdVerified } from 'react-icons/md';
 import ShareButtons from '@/components/ShareButtons';
 import AdminEditButton from '@/components/AdminEditButton';
 import Link from 'next/link';
+import { getApiUrl } from '@/lib/api';
 
 async function getNewsData(id: string) {
   try {
-    const res = await fetch(`http://localhost:5000/api/news/${id}`, { cache: 'no-store' });
+    const res = await fetch(`${getApiUrl()}/news/${id}`, { cache: 'no-store' });
     if (!res.ok) return null;
     return res.json();
   } catch (err) {

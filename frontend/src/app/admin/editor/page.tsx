@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
+import { getApiUrl } from '@/lib/api';
 
 export default function AdminEditor() {
   const [title, setTitle] = useState('');
@@ -19,7 +20,7 @@ export default function AdminEditor() {
     setId(editId);
     
     if (editId) {
-      fetch(`http://${window.location.hostname}:5000/api/news/${editId}`)
+      fetch(`${getApiUrl()}/news/${editId}`)
         .then(res => res.json())
         .then(data => {
           setTitle(data.title);
@@ -41,7 +42,7 @@ export default function AdminEditor() {
     formData.append('content', content);
     if (file) formData.append('media', file);
 
-    const url = id ? `http://${window.location.hostname}:5000/api/admin/news/${id}` : `http://${window.location.hostname}:5000/api/admin/news`;
+    const url = id ? `${getApiUrl()}/admin/news/${id}` : `${getApiUrl()}/admin/news`;
     const method = id ? 'PUT' : 'POST';
 
     try {
