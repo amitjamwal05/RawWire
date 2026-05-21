@@ -89,6 +89,16 @@ router.delete('/news/:id', async (req, res) => {
     const news = await News.findById(req.params.id);
     if (!news) return res.status(404).json({ message: 'News not found' });
     
+    // Delete media from Cloudinary
+    if (news.mediaUrl) {
+      const cloudinary = require('cloudinary').v2;
+      const publicIdMatch = news.mediaUrl.match(/\/rawwire\/([^\.]+)/);
+      if (publicIdMatch) {
+        const public_id = `rawwire/${publicIdMatch[1]}`;
+        await cloudinary.uploader.destroy(public_id, { resource_type: news.mediaType });
+      }
+    }
+
     await news.deleteOne();
     res.json({ message: 'News removed' });
   } catch (error) {
