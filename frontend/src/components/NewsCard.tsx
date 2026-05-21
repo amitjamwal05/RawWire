@@ -34,7 +34,9 @@ export default function NewsCard({ item }: { item: any }) {
           {/* Text Body */}
           <div className="text-[15px] leading-normal text-foreground mb-3 whitespace-pre-wrap">
             <span className="font-bold text-lg block mb-1">{item.title}</span>
-            {item.content}
+            <div className="line-clamp-4 text-muted-foreground">
+              {item.content}
+            </div>
           </div>
 
           {/* Media Attachment */}
