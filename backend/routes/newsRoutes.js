@@ -52,12 +52,11 @@ router.get('/trending', async (req, res) => {
 // Get User Profile News
 router.get('/user/:username', async (req, res) => {
   try {
-    const username = req.params.username;
-    // We match the exact username case-insensitively
+    const username = req.params.username.trim();
+    // We match the username case-insensitively and allow for slight variations in the DB
     const query = { 
-      isApproved: { $ne: false }, 
-      isUserSubmitted: true,
-      userName: { $regex: new RegExp(`^${username}$`, 'i') } 
+      isApproved: { $ne: false },
+      userName: { $regex: new RegExp(username, 'i') } 
     };
     const news = await News.find(query).sort({ createdAt: -1 });
     res.json(news);
