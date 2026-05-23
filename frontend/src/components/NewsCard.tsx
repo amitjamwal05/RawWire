@@ -54,8 +54,16 @@ export default function NewsCard({ item }: { item: any }) {
 
           {/* Text Body */}
           <div className="text-[15px] leading-normal text-foreground mb-3">
-            <span className="font-bold text-lg block mb-1 line-clamp-2 break-all">{item.title}</span>
-            <div className="line-clamp-4 text-muted-foreground break-words whitespace-pre-wrap">
+            <div 
+              className="font-bold text-lg mb-1 break-words overflow-hidden text-ellipsis"
+              style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}
+            >
+              {item.title}
+            </div>
+            <div 
+              className="text-muted-foreground break-words whitespace-pre-wrap overflow-hidden text-ellipsis"
+              style={{ display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical' }}
+            >
               {item.content}
             </div>
           </div>
