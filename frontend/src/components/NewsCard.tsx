@@ -53,9 +53,9 @@ export default function NewsCard({ item }: { item: any }) {
           </div>
 
           {/* Text Body */}
-          <div className="text-[15px] leading-normal text-foreground mb-3 whitespace-pre-wrap">
-            <span className="font-bold text-lg block mb-1 line-clamp-2 break-words">{item.title}</span>
-            <div className="line-clamp-4 text-muted-foreground break-words">
+          <div className="text-[15px] leading-normal text-foreground mb-3">
+            <span className="font-bold text-lg block mb-1 line-clamp-2 break-all">{item.title}</span>
+            <div className="line-clamp-4 text-muted-foreground break-words whitespace-pre-wrap">
               {item.content}
             </div>
           </div>
