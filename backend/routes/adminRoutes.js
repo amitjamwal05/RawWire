@@ -50,6 +50,30 @@ router.post('/init', async (req, res) => {
 // Protect all routes below
 router.use(protect);
 
+// Get Pending News
+router.get('/news/pending', async (req, res) => {
+  try {
+    const pendingNews = await News.find({ isApproved: false, isPaid: true }).sort({ createdAt: -1 });
+    res.json(pendingNews);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Approve News
+router.put('/news/:id/approve', async (req, res) => {
+  try {
+    const news = await News.findById(req.params.id);
+    if (!news) return res.status(404).json({ message: 'News not found' });
+    
+    news.isApproved = true;
+    await news.save();
+    res.json({ message: 'News approved successfully', news });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Create News
 router.post('/news', upload.single('media'), async (req, res) => {
   try {
@@ -118,12 +142,27 @@ router.delete('/news/:id', async (req, res) => {
 // Get Analytics
 router.get('/analytics', async (req, res) => {
   try {
-    const allNews = await News.find().select('title views createdAt');
+    const liveQuery = {
+      $or: [
+        { isUserSubmitted: false },
+        { isUserSubmitted: { $exists: false } },
+        { isApproved: true }
+      ]
+    };
+    const liveNews = await News.find(liveQuery).sort({ createdAt: -1 }).select('title views createdAt');
+    
+    const abandonedQuery = {
+      isUserSubmitted: true,
+      isPaid: false
+    };
+    const abandonedNews = await News.find(abandonedQuery).sort({ createdAt: -1 }).select('title views createdAt');
+
     const today = new Date().toISOString().split('T')[0];
     const dailyAnalytics = await Analytics.findOne({ date: today });
     
     res.json({
-      newsStats: allNews,
+      newsStats: liveNews,
+      abandonedStats: abandonedNews,
       todayViews: dailyAnalytics ? dailyAnalytics.totalViews : 0
     });
   } catch (error) {

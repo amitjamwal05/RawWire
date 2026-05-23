@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Home, ShieldAlert, Moon, Sun, Feather } from 'lucide-react';
+import { Home, ShieldAlert, Moon, Sun, Feather, PenTool } from 'lucide-react';
 import { MdVerified } from 'react-icons/md';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
@@ -56,7 +56,17 @@ export default function Sidebar() {
           </button>
         </nav>
 
-        {/* Desktop Post Button */}
+        {/* Public Submit News Button */}
+        {!isAdmin && (
+          <div className="w-full mt-6 flex justify-center xl:justify-start xl:px-4">
+            <Link href="/submit" className="bg-accent hover:bg-accent/90 text-white rounded-full p-3 xl:py-3 xl:px-8 font-bold transition-colors w-auto xl:w-[90%] flex items-center justify-center shadow-lg hover:shadow-accent/25">
+              <span className="hidden xl:inline">Submit News</span>
+              <PenTool className="xl:hidden" size={24} />
+            </Link>
+          </div>
+        )}
+
+        {/* Admin Post Button */}
         {isAdmin && (
           <Link href="/admin/editor" className="hidden sm:flex mt-6 w-14 h-14 xl:w-[90%] xl:h-auto items-center justify-center x-btn-primary xl:py-4">
             <Feather size={24} className="xl:hidden" />

@@ -10,14 +10,14 @@ router.get('/', async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || '';
     
-    let query = {};
+    // Match posts that are approved OR existing posts that don't have the field yet
+    let query = { isApproved: { $ne: false } };
+
     if (search) {
-      query = {
-        $or: [
-          { title: { $regex: search, $options: 'i' } },
-          { content: { $regex: search, $options: 'i' } }
-        ]
-      };
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { content: { $regex: search, $options: 'i' } }
+      ];
     }
 
     const total = await News.countDocuments(query);

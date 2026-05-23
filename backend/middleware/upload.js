@@ -14,7 +14,7 @@ const storage = new CloudinaryStorage({
   params: {
     folder: 'rawwire',
     resource_type: 'auto', // allows video and image
-    allowed_formats: ['jpg', 'png', 'jpeg', 'mp4', 'mov', 'webm'],
+    allowed_formats: ['jpg', 'png', 'jpeg', 'svg', 'mp4', 'mov', 'webm'],
   },
 });
 

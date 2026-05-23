@@ -45,12 +45,27 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
       <div className="p-4 flex flex-col border-b border-border">
         {/* Author Header */}
         <div className="flex items-center gap-3 mb-4">
-          <Image src="/logo.png" alt="RawWire" width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0" />
+          {news.isUserSubmitted && news.userPhotoUrl ? (
+            <Image src={news.userPhotoUrl} alt={news.userName} width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0 object-cover border border-border" />
+          ) : (
+            <Image src="/logo.png" alt="RawWire" width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0 border border-border" />
+          )}
           <div className="flex flex-col">
-            <span className="font-bold hover:underline cursor-pointer leading-tight flex items-center">
-              RawWire <MdVerified className="text-accent ml-1 text-[18px]" />
-            </span>
-            <span className="text-muted text-sm">@rawwire</span>
+            {news.isUserSubmitted ? (
+              <>
+                <span className="font-bold hover:underline cursor-pointer leading-tight flex items-center">
+                  {news.userName} <MdVerified className="text-pink-500 ml-1 text-[18px]" />
+                </span>
+                <span className="text-muted text-sm">@{news.userName.toLowerCase().replace(/\s+/g, '')}</span>
+              </>
+            ) : (
+              <>
+                <span className="font-bold hover:underline cursor-pointer leading-tight flex items-center">
+                  RawWire <MdVerified className="text-accent ml-1 text-[18px]" />
+                </span>
+                <span className="text-muted text-sm">@rawwire</span>
+              </>
+            )}
           </div>
           <AdminEditButton id={news._id} />
         </div>
@@ -64,19 +79,21 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
         </div>
 
         {/* Media Attachment */}
-        <div className="w-full relative rounded-2xl overflow-hidden border border-border bg-hover-bg mb-4">
-          {news.mediaType === 'video' ? (
-            <video src={news.mediaUrl} className="w-full max-h-[600px] object-contain" controls playsInline autoPlay />
-          ) : (
-            <Image 
-               src={news.mediaUrl} 
-               alt={news.title} 
-               width={800} 
-               height={600} 
-               className="w-full h-auto object-cover" 
-            />
-          )}
-        </div>
+        {news.mediaUrl && (
+          <div className="w-full relative rounded-2xl overflow-hidden border border-border bg-hover-bg mb-4">
+            {news.mediaType === 'video' ? (
+              <video src={news.mediaUrl} className="w-full max-h-[600px] object-contain" controls playsInline autoPlay />
+            ) : (
+              <Image 
+                 src={news.mediaUrl} 
+                 alt={news.title} 
+                 width={800} 
+                 height={600} 
+                 className="w-full h-auto object-cover" 
+              />
+            )}
+          </div>
+        )}
 
         {/* Timestamp */}
         <div className="flex items-center gap-1 text-[15px] text-muted mb-4">

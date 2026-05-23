@@ -15,17 +15,32 @@ export default function NewsCard({ item }: { item: any }) {
     <Link href={`/news/${item._id}`} className="block w-full border-b border-border x-hover cursor-pointer transition-colors p-4">
       <div className="flex gap-3">
         {/* Avatar */}
-        <Image src="/logo.png" alt="RawWire" width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0" />
+        {item.isUserSubmitted && item.userPhotoUrl ? (
+          <Image src={item.userPhotoUrl} alt={item.userName} width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0 object-cover border border-border" />
+        ) : (
+          <Image src="/logo.png" alt="RawWire" width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0 border border-border" />
+        )}
         
         {/* Content */}
         <div className="flex flex-col flex-1 min-w-0">
           
           {/* Header */}
           <div className="flex items-center gap-1.5 mb-1 text-[15px]">
-            <span className="font-bold text-foreground hover:underline flex items-center">
-              RawWire <MdVerified className="text-accent ml-1 text-[18px]" />
-            </span>
-            <span className="text-muted">@rawwire</span>
+            {item.isUserSubmitted ? (
+              <>
+                <span className="font-bold text-foreground hover:underline flex items-center">
+                  {item.userName} <MdVerified className="text-pink-500 ml-1 text-[18px]" />
+                </span>
+                <span className="text-muted">@{item.userName.toLowerCase().replace(/\s+/g, '')}</span>
+              </>
+            ) : (
+              <>
+                <span className="font-bold text-foreground hover:underline flex items-center">
+                  RawWire <MdVerified className="text-accent ml-1 text-[18px]" />
+                </span>
+                <span className="text-muted">@rawwire</span>
+              </>
+            )}
             <span className="text-muted">·</span>
             <span className="text-muted hover:underline">{formattedDate}</span>
             <AdminEditButton id={item._id} />
@@ -33,7 +48,7 @@ export default function NewsCard({ item }: { item: any }) {
 
           {/* Text Body */}
           <div className="text-[15px] leading-normal text-foreground mb-3 whitespace-pre-wrap">
-            <span className="font-bold text-lg block mb-1">{item.title}</span>
+            <span className="font-bold text-lg block mb-1 line-clamp-2">{item.title}</span>
             <div className="line-clamp-4 text-muted-foreground">
               {item.content}
             </div>
