@@ -5,8 +5,9 @@ import { ArrowLeft, UserRound } from 'lucide-react';
 import { getApiUrl } from '@/lib/api';
 import NewsCard from '@/components/NewsCard';
 
-export async function generateMetadata({ params }: { params: { username: string } }): Promise<Metadata> {
-  const username = decodeURIComponent(params.username);
+export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
+  const resolvedParams = await params;
+  const username = decodeURIComponent(resolvedParams.username);
   return {
     title: `${username} (@${username.toLowerCase().replace(/\s+/g, '')}) | RawWire`,
     description: `News reported by ${username} on RawWire`,
@@ -23,8 +24,9 @@ async function getUserNews(username: string) {
   }
 }
 
-export default async function UserProfile({ params }: { params: { username: string } }) {
-  const decodedUsername = decodeURIComponent(params.username);
+export default async function UserProfile({ params }: { params: Promise<{ username: string }> }) {
+  const resolvedParams = await params;
+  const decodedUsername = decodeURIComponent(resolvedParams.username);
   const news = await getUserNews(decodedUsername);
 
   // Derive an avatar from the first post (if they have one)
