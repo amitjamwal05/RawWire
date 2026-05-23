@@ -89,7 +89,7 @@ export default function SubmitNews() {
       formData.append('userAadhaar', userAadhaar);
       formData.append('title', title);
       formData.append('content', content);
-      formData.append('media', media);
+      if (media) formData.append('media', media);
       if (userPhoto) formData.append('userPhoto', userPhoto);
 
       const orderRes = await fetch(`${getApiUrl()}/payments/create-order`, {
