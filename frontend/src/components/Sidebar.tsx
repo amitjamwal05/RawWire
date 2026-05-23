@@ -58,7 +58,7 @@ export default function Sidebar() {
 
         {/* Public Submit News Button */}
         {!isAdmin && (
-          <div className="w-full mt-6 flex justify-center xl:justify-start xl:px-4">
+          <div className="hidden sm:flex w-full mt-6 justify-center xl:justify-start xl:px-4">
             <Link href="/submit" className="bg-accent hover:bg-accent/90 text-white rounded-full p-3 xl:py-3 xl:px-8 font-bold transition-colors w-auto xl:w-[90%] flex items-center justify-center shadow-lg hover:shadow-accent/25">
               <span className="hidden xl:inline">Submit News</span>
               <PenTool className="xl:hidden" size={24} />
@@ -87,11 +87,12 @@ export default function Sidebar() {
       </div>
 
       {/* Mobile Floating Action Button (FAB) */}
-      {isAdmin && (
-        <Link href="/admin/editor" className="sm:hidden fixed bottom-[72px] right-4 w-14 h-14 bg-accent text-white rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(29,155,240,0.5)] z-50 hover:bg-accent-hover transition-colors">
-          <Feather size={26} />
-        </Link>
-      )}
+      <Link 
+        href={isAdmin ? "/admin/editor" : "/submit"} 
+        className="sm:hidden fixed bottom-[72px] right-4 w-14 h-14 bg-accent text-white rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(29,155,240,0.5)] z-50 hover:bg-accent-hover transition-colors"
+      >
+        <Feather size={26} />
+      </Link>
     </>
   );
 }
