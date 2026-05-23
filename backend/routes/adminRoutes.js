@@ -74,6 +74,20 @@ router.put('/news/:id/approve', async (req, res) => {
   }
 });
 
+// Toggle Pin Status
+router.put('/news/:id/pin', async (req, res) => {
+  try {
+    const news = await News.findById(req.params.id);
+    if (!news) return res.status(404).json({ message: 'News not found' });
+    
+    news.isPinned = !news.isPinned;
+    await news.save();
+    res.json({ message: news.isPinned ? 'News pinned' : 'News unpinned', news });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Create News
 router.post('/news', upload.single('media'), async (req, res) => {
   try {
@@ -159,7 +173,7 @@ router.get('/analytics', async (req, res) => {
         { isApproved: true }
       ]
     };
-    const liveNews = await News.find(liveQuery).sort({ createdAt: -1 }).select('title views createdAt');
+    const liveNews = await News.find(liveQuery).sort({ createdAt: -1 }).select('title views createdAt isPinned');
     
     const abandonedQuery = {
       isUserSubmitted: true,

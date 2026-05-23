@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Trash2, Edit, Plus, LogOut, CheckCircle } from 'lucide-react';
+import { Trash2, Edit, Plus, LogOut, CheckCircle, Pin } from 'lucide-react';
 import { getApiUrl } from '@/lib/api';
 import toast from 'react-hot-toast';
 
@@ -75,6 +75,29 @@ export default function AdminDashboard() {
         toast.success('Post deleted successfully', { id: toastId });
       } else {
         toast.error('Failed to delete post', { id: toastId });
+      }
+    } catch (err) {
+      toast.error('Network error. Please try again.', { id: toastId });
+    }
+  };
+
+  const handlePin = async (id: string, currentPinStatus: boolean) => {
+    const token = localStorage.getItem('adminToken');
+    const toastId = toast.loading(currentPinStatus ? 'Unpinning post...' : 'Pinning post...');
+    try {
+      const res = await fetch(`${getApiUrl()}/admin/news/${id}/pin`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setStats((prev: any) => ({
+          ...prev,
+          newsStats: prev.newsStats?.map((n: any) => n._id === id ? { ...n, isPinned: data.news.isPinned } : n) || []
+        }));
+        toast.success(data.message, { id: toastId });
+      } else {
+        toast.error('Failed to toggle pin', { id: toastId });
       }
     } catch (err) {
       toast.error('Network error. Please try again.', { id: toastId });
@@ -181,6 +204,9 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                     <div className="flex gap-2">
+                      <button onClick={() => handlePin(news._id, news.isPinned)} className={`p-2 rounded-full transition-colors border border-transparent ${news.isPinned ? 'text-accent bg-accent/20 border-accent/20' : 'text-muted hover:text-accent hover:bg-accent/10 hover:border-accent/20'}`}>
+                        <Pin size={20} className={news.isPinned ? 'fill-current rotate-45' : ''} />
+                      </button>
                       <Link href={`/admin/editor?id=${news._id}`} className="p-2 text-muted hover:text-accent hover:bg-accent/10 rounded-full transition-colors border border-transparent hover:border-accent/20">
                         <Edit size={20} />
                       </Link>

@@ -21,6 +21,14 @@ const newsSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  upvotes: {
+    type: Number,
+    default: 0
+  },
+  isPinned: {
+    type: Boolean,
+    default: false
+  },
   
   // Paid User Submission Fields
   isUserSubmitted: { type: Boolean, default: false },

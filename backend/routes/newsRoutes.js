@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
 
     const total = await News.countDocuments(query);
     const news = await News.find(query)
-      .sort({ createdAt: -1 })
+      .sort({ isPinned: -1, createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit);
       
@@ -32,6 +32,35 @@ router.get('/', async (req, res) => {
       page,
       pages: Math.ceil(total / limit)
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get Trending News
+router.get('/trending', async (req, res) => {
+  try {
+    const trendingNews = await News.find({ isApproved: { $ne: false } })
+      .sort({ views: -1, upvotes: -1 })
+      .limit(5);
+    res.json(trendingNews);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get User Profile News
+router.get('/user/:username', async (req, res) => {
+  try {
+    const username = req.params.username;
+    // We match the exact username case-insensitively
+    const query = { 
+      isApproved: { $ne: false }, 
+      isUserSubmitted: true,
+      userName: { $regex: new RegExp(`^${username}$`, 'i') } 
+    };
+    const news = await News.find(query).sort({ createdAt: -1 });
+    res.json(news);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -67,6 +96,34 @@ router.post('/view/:id', async (req, res) => {
     await analytics.save();
 
     res.json({ success: true, views: news.views, dailyTotal: analytics.totalViews });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Increment Upvote
+router.put('/:id/upvote', async (req, res) => {
+  try {
+    const news = await News.findById(req.params.id);
+    if (!news) return res.status(404).json({ message: 'News not found' });
+    
+    news.upvotes = (news.upvotes || 0) + 1;
+    await news.save();
+    res.json({ success: true, upvotes: news.upvotes });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Decrement Upvote
+router.put('/:id/downvote', async (req, res) => {
+  try {
+    const news = await News.findById(req.params.id);
+    if (!news) return res.status(404).json({ message: 'News not found' });
+    
+    news.upvotes = Math.max(0, (news.upvotes || 0) - 1);
+    await news.save();
+    res.json({ success: true, upvotes: news.upvotes });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
