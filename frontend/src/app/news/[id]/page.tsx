@@ -78,8 +78,8 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
 
         {/* Content */}
         <div className="mb-4">
-          <h2 className="text-2xl font-bold mb-2">{news.title}</h2>
-          <div className="text-[17px] leading-relaxed text-foreground whitespace-pre-wrap">
+          <h2 className="text-2xl font-bold mb-2 break-words">{news.title}</h2>
+          <div className="text-[17px] leading-relaxed text-foreground whitespace-pre-wrap break-words">
             {news.content}
           </div>
         </div>

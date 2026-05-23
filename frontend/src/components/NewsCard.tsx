@@ -54,28 +54,30 @@ export default function NewsCard({ item }: { item: any }) {
 
           {/* Text Body */}
           <div className="text-[15px] leading-normal text-foreground mb-3 whitespace-pre-wrap">
-            <span className="font-bold text-lg block mb-1 line-clamp-2">{item.title}</span>
-            <div className="line-clamp-4 text-muted-foreground">
+            <span className="font-bold text-lg block mb-1 line-clamp-2 break-words">{item.title}</span>
+            <div className="line-clamp-4 text-muted-foreground break-words">
               {item.content}
             </div>
           </div>
 
           {/* Media Attachment */}
-          <div className="w-full relative rounded-2xl overflow-hidden border border-border bg-hover-bg mb-3">
-            {isVideo ? (
-              <video src={item.mediaUrl} className="w-full max-h-[500px] object-cover" controls playsInline />
-            ) : (
-              <div className="relative w-full h-auto max-h-[500px]">
-                <Image 
-                   src={item.mediaUrl} 
-                   alt={item.title} 
-                   width={600} 
-                   height={400} 
-                   className="w-full h-auto object-cover max-h-[500px]" 
-                />
-              </div>
-            )}
-          </div>
+          {item.mediaUrl && (
+            <div className="w-full relative rounded-2xl overflow-hidden border border-border bg-hover-bg mb-3">
+              {isVideo ? (
+                <video src={item.mediaUrl} className="w-full max-h-[500px] object-cover" controls playsInline />
+              ) : (
+                <div className="relative w-full h-auto max-h-[500px]">
+                  <Image 
+                     src={item.mediaUrl} 
+                     alt={item.title} 
+                     width={600} 
+                     height={400} 
+                     className="w-full h-auto object-cover max-h-[500px]" 
+                  />
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Action Buttons */}
           <ShareButtons item={item} />
