@@ -273,7 +273,7 @@ export default function SubmitNews() {
           <div className="flex flex-col gap-4 h-full">
             <input
               type="text"
-              placeholder="Breaking News Title"
+              placeholder="Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="bg-transparent border-none text-2xl font-bold outline-none placeholder:text-muted py-2 w-full"
