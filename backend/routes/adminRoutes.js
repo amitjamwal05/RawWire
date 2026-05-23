@@ -6,9 +6,18 @@ const News = require('../models/News');
 const Analytics = require('../models/Analytics');
 const upload = require('../middleware/upload');
 const { protect } = require('../middleware/auth');
+const rateLimit = require('express-rate-limit');
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 login requests per windowMs
+  message: { message: 'Too many login attempts from this IP, please try again after 15 minutes' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // Auth: Login
-router.post('/login', async (req, res) => {
+router.post('/login', loginLimiter, async (req, res) => {
   const { username, password } = req.body;
   try {
     const admin = await Admin.findOne({ username });

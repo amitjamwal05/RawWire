@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getApiUrl } from '@/lib/api';
+import toast from 'react-hot-toast';
 
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
@@ -19,12 +20,13 @@ export default function AdminLogin() {
       const data = await res.json();
       if (res.ok) {
         localStorage.setItem('adminToken', data.token);
+        toast.success('Login successful!');
         router.push('/admin/dashboard');
       } else {
-        alert(data.message);
+        toast.error(data.message || 'Login failed');
       }
     } catch (err) {
-      alert('Login failed');
+      toast.error('Network error. Please try again.');
     }
   };
 

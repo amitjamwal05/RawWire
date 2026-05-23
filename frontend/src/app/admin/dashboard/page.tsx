@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Trash2, Edit, Plus, LogOut } from 'lucide-react';
 import { getApiUrl } from '@/lib/api';
+import toast from 'react-hot-toast';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<any>(null);
@@ -33,18 +34,29 @@ export default function AdminDashboard() {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this post?')) return;
     const token = localStorage.getItem('adminToken');
-    await fetch(`${getApiUrl()}/admin/news/${id}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    setStats((prev: any) => ({
-      ...prev,
-      newsStats: prev.newsStats.filter((n: any) => n._id !== id)
-    }));
+    const toastId = toast.loading('Deleting post...');
+    try {
+      const res = await fetch(`${getApiUrl()}/admin/news/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setStats((prev: any) => ({
+          ...prev,
+          newsStats: prev.newsStats.filter((n: any) => n._id !== id)
+        }));
+        toast.success('Post deleted successfully', { id: toastId });
+      } else {
+        toast.error('Failed to delete post', { id: toastId });
+      }
+    } catch (err) {
+      toast.error('Network error. Please try again.', { id: toastId });
+    }
   };
   
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
+    toast.success('Logged out successfully');
     router.push('/admin/login');
   };
 

@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Sidebar from '@/components/Sidebar';
+import SearchBar from '@/components/SearchBar';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -23,6 +25,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased font-sans min-h-screen flex justify-center bg-background text-foreground`}>
         <ThemeProvider>
+          <Toaster position="bottom-center" toastOptions={{ style: { background: '#333', color: '#fff' } }} />
           <div className="w-full max-w-[1265px] flex min-h-screen relative justify-center sm:justify-start">
             {/* Left Sidebar Spacer & Nav */}
             <header className="sm:w-[80px] xl:w-[275px] flex-shrink-0 sm:border-r border-border">
@@ -37,10 +40,7 @@ export default function RootLayout({
             {/* Right Sidebar (Search) */}
             <aside className="hidden lg:block w-[350px] pl-8 py-4 flex-shrink-0">
               <div className="sticky top-4">
-                <div className="bg-hover-bg rounded-full px-4 py-3 flex items-center gap-3 text-muted">
-                  <span>🔍</span>
-                  <input type="text" placeholder="Search" className="bg-transparent outline-none w-full text-foreground" />
-                </div>
+                <SearchBar />
               </div>
             </aside>
           </div>

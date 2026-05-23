@@ -3,11 +3,35 @@ const router = express.Router();
 const News = require('../models/News');
 const Analytics = require('../models/Analytics');
 
-// Get all news
+// Get all news (with pagination and search)
 router.get('/', async (req, res) => {
   try {
-    const news = await News.find().sort({ createdAt: -1 });
-    res.json(news);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || '';
+    
+    let query = {};
+    if (search) {
+      query = {
+        $or: [
+          { title: { $regex: search, $options: 'i' } },
+          { content: { $regex: search, $options: 'i' } }
+        ]
+      };
+    }
+
+    const total = await News.countDocuments(query);
+    const news = await News.find(query)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+      
+    res.json({
+      data: news,
+      total,
+      page,
+      pages: Math.ceil(total / limit)
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

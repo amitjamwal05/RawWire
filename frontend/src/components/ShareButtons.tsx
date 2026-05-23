@@ -2,6 +2,7 @@
 
 import { BarChart2, Share } from 'lucide-react';
 import { FaXTwitter, FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa6';
+import toast from 'react-hot-toast';
 
 export default function ShareButtons({ item, isDetail = false }: { item: any, isDetail?: boolean }) {
   const handleShare = (e: React.MouseEvent, platform: string) => {
@@ -25,12 +26,12 @@ export default function ShareButtons({ item, isDetail = false }: { item: any, is
         }).catch(console.error);
       } else {
         navigator.clipboard.writeText(shareUrl);
-        alert('Link copied to clipboard!');
+        toast.success('Link copied to clipboard!');
       }
     } else if (platform === 'instagram') {
       // Instagram web doesn't have a direct share URL, fallback to copying link
       navigator.clipboard.writeText(shareUrl);
-      alert('Link copied to clipboard! You can now paste it in Instagram.');
+      toast.success('Link copied! You can now paste it in Instagram.');
     }
   };
 

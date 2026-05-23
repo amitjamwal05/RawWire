@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import { getApiUrl } from '@/lib/api';
+import toast from 'react-hot-toast';
 
 export default function AdminEditor() {
   const [title, setTitle] = useState('');
@@ -53,13 +54,14 @@ export default function AdminEditor() {
       });
       
       if (res.ok) {
+        toast.success(id ? 'Post updated successfully!' : 'Post published successfully!');
         router.push('/admin/dashboard');
       } else {
         const error = await res.json();
-        alert(error.message);
+        toast.error(error.message || 'Something went wrong');
       }
     } catch (err) {
-      alert('Error saving news');
+      toast.error('Network error. Please try again.');
     } finally {
       setLoading(false);
     }
