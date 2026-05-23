@@ -78,14 +78,14 @@ router.put('/news/:id/approve', async (req, res) => {
 router.post('/news', upload.single('media'), async (req, res) => {
   try {
     const { title, content } = req.body;
-    if (!req.file) return res.status(400).json({ message: 'Media file is required' });
     
-    const mediaType = req.file.mimetype.startsWith('video/') ? 'video' : 'image';
+    let mediaType = 'image';
+    if (req.file && req.file.mimetype.startsWith('video/')) mediaType = 'video';
     
     const news = await News.create({
       title,
       content,
-      mediaUrl: req.file.path,
+      mediaUrl: req.file ? req.file.path : null,
       mediaType
     });
     res.status(201).json(news);
@@ -129,6 +129,16 @@ router.delete('/news/:id', async (req, res) => {
       if (publicIdMatch) {
         const public_id = `rawwire/${publicIdMatch[1]}`;
         await cloudinary.uploader.destroy(public_id, { resource_type: news.mediaType });
+      }
+    }
+    
+    // Delete user photo from Cloudinary
+    if (news.userPhotoUrl) {
+      const cloudinary = require('cloudinary').v2;
+      const publicIdMatch = news.userPhotoUrl.match(/\/rawwire\/([^\.]+)/);
+      if (publicIdMatch) {
+        const public_id = `rawwire/${publicIdMatch[1]}`;
+        await cloudinary.uploader.destroy(public_id, { resource_type: 'image' });
       }
     }
 

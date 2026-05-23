@@ -60,8 +60,8 @@ export default function SubmitNews() {
   };
 
   const handleNext = () => {
-    if (!userName || !userEmail || !userPhone || !userAadhaar || !userPhoto) {
-      toast.error('All personal details and a profile photo are required');
+    if (!userName || !userEmail || !userPhone || !userAadhaar) {
+      toast.error('All personal details are required');
       return;
     }
     if (userAadhaar.length !== 12 || !/^\d+$/.test(userAadhaar)) {
@@ -72,8 +72,8 @@ export default function SubmitNews() {
   };
 
   const handleSubmit = async () => {
-    if (!title || !content || !media) {
-      toast.error('Title, content, and media are required');
+    if (!title || !content) {
+      toast.error('Title and content are required');
       return;
     }
 

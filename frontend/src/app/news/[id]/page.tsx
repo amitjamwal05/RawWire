@@ -45,8 +45,14 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
       <div className="p-4 flex flex-col border-b border-border">
         {/* Author Header */}
         <div className="flex items-center gap-3 mb-4">
-          {news.isUserSubmitted && news.userPhotoUrl ? (
-            <Image src={news.userPhotoUrl} alt={news.userName} width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0 object-cover border border-border" />
+          {news.isUserSubmitted ? (
+            news.userPhotoUrl ? (
+              <Image src={news.userPhotoUrl} alt={news.userName} width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0 object-cover border border-border" />
+            ) : (
+              <div className="w-10 h-10 rounded-full flex-shrink-0 bg-accent text-white flex items-center justify-center font-bold border border-border text-sm">
+                {news.userName ? (news.userName.trim().split(' ').length >= 2 ? (news.userName.trim().split(' ')[0][0] + news.userName.trim().split(' ')[news.userName.trim().split(' ').length - 1][0]).toUpperCase() : news.userName[0].toUpperCase()) : 'U'}
+              </div>
+            )
           ) : (
             <Image src="/logo.png" alt="RawWire" width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0 border border-border" />
           )}

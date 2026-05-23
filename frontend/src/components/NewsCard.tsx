@@ -15,8 +15,14 @@ export default function NewsCard({ item }: { item: any }) {
     <Link href={`/news/${item._id}`} className="block w-full border-b border-border x-hover cursor-pointer transition-colors p-4">
       <div className="flex gap-3">
         {/* Avatar */}
-        {item.isUserSubmitted && item.userPhotoUrl ? (
-          <Image src={item.userPhotoUrl} alt={item.userName} width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0 object-cover border border-border" />
+        {item.isUserSubmitted ? (
+          item.userPhotoUrl ? (
+            <Image src={item.userPhotoUrl} alt={item.userName} width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0 object-cover border border-border" />
+          ) : (
+            <div className="w-10 h-10 rounded-full flex-shrink-0 bg-accent text-white flex items-center justify-center font-bold border border-border text-sm">
+              {item.userName ? (item.userName.trim().split(' ').length >= 2 ? (item.userName.trim().split(' ')[0][0] + item.userName.trim().split(' ')[item.userName.trim().split(' ').length - 1][0]).toUpperCase() : item.userName[0].toUpperCase()) : 'U'}
+            </div>
+          )
         ) : (
           <Image src="/logo.png" alt="RawWire" width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0 border border-border" />
         )}
