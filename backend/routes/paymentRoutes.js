@@ -8,7 +8,7 @@ const upload = require('../middleware/upload');
 // Create user submitted news and Razorpay order
 router.post('/create-order', upload.fields([{ name: 'media', maxCount: 1 }, { name: 'userPhoto', maxCount: 1 }]), async (req, res) => {
   try {
-    const { title, content, userName, userEmail, userPhone, userAadhaar } = req.body;
+    const { title, content, userName, userEmail, userPhone, userAadhaar, category } = req.body;
     
     if (!userName || !userEmail || !userPhone || !userAadhaar || userAadhaar.length !== 12) {
       return res.status(400).json({ message: 'Valid User Details and 12-digit Aadhaar required' });
@@ -22,6 +22,7 @@ router.post('/create-order', upload.fields([{ name: 'media', maxCount: 1 }, { na
     const news = await News.create({
       title,
       content,
+      category: category || 'General',
       mediaUrl: mediaFile ? mediaFile.path : null,
       mediaType,
       isUserSubmitted: true,

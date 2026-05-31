@@ -20,6 +20,7 @@ export default function SubmitNews() {
   const [userAadhaar, setUserAadhaar] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [category, setCategory] = useState('General');
   const [media, setMedia] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [userPhoto, setUserPhoto] = useState<File | null>(null);
@@ -89,6 +90,7 @@ export default function SubmitNews() {
       formData.append('userAadhaar', userAadhaar);
       formData.append('title', title);
       formData.append('content', content);
+      formData.append('category', category);
       if (media) formData.append('media', media);
       if (userPhoto) formData.append('userPhoto', userPhoto);
 
@@ -278,6 +280,20 @@ export default function SubmitNews() {
               onChange={(e) => setTitle(e.target.value)}
               className="bg-transparent border-none text-2xl font-bold outline-none placeholder:text-muted py-2 w-full"
             />
+
+            <select 
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full bg-hover-bg border border-border text-foreground rounded-xl p-3 mb-2 outline-none focus:border-accent"
+            >
+              <option value="General">General</option>
+              <option value="Politics">Politics</option>
+              <option value="Tech">Tech</option>
+              <option value="Sports">Sports</option>
+              <option value="Local">Local</option>
+              <option value="World">World</option>
+              <option value="Entertainment">Entertainment</option>
+            </select>
             
             <textarea
               placeholder="What's happening?"

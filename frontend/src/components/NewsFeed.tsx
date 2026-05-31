@@ -4,7 +4,7 @@ import NewsCard from './NewsCard';
 import { getApiUrl } from '@/lib/api';
 import toast from 'react-hot-toast';
 
-export default function NewsFeed({ initialNews, totalPages }: { initialNews: any[], totalPages: number }) {
+export default function NewsFeed({ initialNews, totalPages, currentCategory }: { initialNews: any[], totalPages: number, currentCategory: string }) {
   const [news, setNews] = useState(initialNews);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -15,7 +15,7 @@ export default function NewsFeed({ initialNews, totalPages }: { initialNews: any
     setLoading(true);
     try {
       const nextPage = page + 1;
-      const res = await fetch(`${getApiUrl()}/news?page=${nextPage}`);
+      const res = await fetch(`${getApiUrl()}/news?page=${nextPage}&category=${currentCategory || ''}`);
       if (res.ok) {
         const json = await res.json();
         setNews([...news, ...json.data]);

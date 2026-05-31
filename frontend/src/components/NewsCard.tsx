@@ -60,6 +60,14 @@ export default function NewsCard({ item }: { item: any }) {
             )}
             <span className="text-muted hidden sm:inline">·</span>
             <Link href={`/news/${item._id}`} className="text-muted hover:underline">{formattedDate}</Link>
+            {item.category && item.category !== 'General' && (
+              <>
+                <span className="text-muted hidden sm:inline">·</span>
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full border border-border text-muted-foreground bg-hover-bg uppercase tracking-wide">
+                  {item.category}
+                </span>
+              </>
+            )}
             <AdminEditButton id={item._id} />
           </div>
 

@@ -9,9 +9,14 @@ router.get('/', async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || '';
+    const category = req.query.category || '';
     
     // Match posts that are approved OR existing posts that don't have the field yet
     let query = { isApproved: { $ne: false } };
+
+    if (category && category !== 'All') {
+      query.category = category;
+    }
 
     if (search) {
       query.$or = [

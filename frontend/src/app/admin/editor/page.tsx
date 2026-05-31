@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 export default function AdminEditor() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [category, setCategory] = useState('General');
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   
@@ -26,6 +27,7 @@ export default function AdminEditor() {
         .then(data => {
           setTitle(data.title);
           setContent(data.content);
+          if (data.category) setCategory(data.category);
         });
     }
   }, []);
@@ -41,6 +43,7 @@ export default function AdminEditor() {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
+    formData.append('category', category);
     if (file) formData.append('media', file);
 
     const url = id ? `${getApiUrl()}/admin/news/${id}` : `${getApiUrl()}/admin/news`;
@@ -92,6 +95,19 @@ export default function AdminEditor() {
             placeholder="Headline summary..."
             required
           />
+          <select 
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full bg-hover-bg border border-border text-foreground rounded-lg p-2 mb-3 outline-none focus:border-accent"
+          >
+            <option value="General">General</option>
+            <option value="Politics">Politics</option>
+            <option value="Tech">Tech</option>
+            <option value="Sports">Sports</option>
+            <option value="Local">Local</option>
+            <option value="World">World</option>
+            <option value="Entertainment">Entertainment</option>
+          </select>
           <textarea 
             value={content}
             onChange={(e) => setContent(e.target.value)}

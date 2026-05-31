@@ -17,6 +17,10 @@ const newsSchema = new mongoose.Schema({
     enum: ['image', 'video'],
     default: 'image'
   },
+  category: {
+    type: String,
+    default: 'General'
+  },
   views: {
     type: Number,
     default: 0

@@ -91,7 +91,7 @@ router.put('/news/:id/pin', async (req, res) => {
 // Create News
 router.post('/news', upload.single('media'), async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, category } = req.body;
     
     let mediaType = 'image';
     if (req.file && req.file.mimetype.startsWith('video/')) mediaType = 'video';
@@ -99,6 +99,7 @@ router.post('/news', upload.single('media'), async (req, res) => {
     const news = await News.create({
       title,
       content,
+      category: category || 'General',
       mediaUrl: req.file ? req.file.path : null,
       mediaType
     });
@@ -111,12 +112,13 @@ router.post('/news', upload.single('media'), async (req, res) => {
 // Update News
 router.put('/news/:id', upload.single('media'), async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, category } = req.body;
     let news = await News.findById(req.params.id);
     if (!news) return res.status(404).json({ message: 'News not found' });
 
     news.title = title || news.title;
     news.content = content || news.content;
+    news.category = category || news.category;
     
     if (req.file) {
       news.mediaUrl = req.file.path;

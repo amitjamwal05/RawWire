@@ -3,9 +3,11 @@ import Image from 'next/image';
 import { getApiUrl } from '@/lib/api';
 import NewsFeed from '@/components/NewsFeed';
 
-async function getNewsData() {
+import CategoryNav from '@/components/CategoryNav';
+
+async function getNewsData(category: string) {
   try {
-    const res = await fetch(`${getApiUrl()}/news`, { cache: 'no-store' });
+    const res = await fetch(`${getApiUrl()}/news?category=${category || ''}`, { cache: 'no-store' });
     if (!res.ok) return { data: [], pages: 1 };
     const json = await res.json();
     return { data: json.data || [], pages: json.pages || 1 };
@@ -14,8 +16,10 @@ async function getNewsData() {
   }
 }
 
-export default async function Home() {
-  const { data: initialNews, pages: totalPages } = await getNewsData();
+export default async function Home({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
+  const resolvedParams = await searchParams;
+  const currentCategory = resolvedParams.category || '';
+  const { data: initialNews, pages: totalPages } = await getNewsData(currentCategory);
 
   return (
     <div className="w-full flex flex-col min-h-screen">
@@ -30,17 +34,10 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="flex w-full border-b border-border">
-        <div className="flex-1 hover:bg-hover-bg transition-colors cursor-pointer flex justify-center pt-4">
-          <div className="relative pb-4">
-            <span className="font-bold text-foreground">For you</span>
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-accent rounded-full"></div>
-          </div>
-        </div>
-      </div>
+      {/* Category Navigation */}
+      <CategoryNav currentCategory={currentCategory} />
 
-      <NewsFeed initialNews={initialNews} totalPages={totalPages} />
+      <NewsFeed key={currentCategory} initialNews={initialNews} totalPages={totalPages} currentCategory={currentCategory} />
     </div>
   );
 }
