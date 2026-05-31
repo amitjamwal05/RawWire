@@ -5,6 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import { getApiUrl } from '@/lib/api';
 import toast from 'react-hot-toast';
+import RichEditor from '@/components/RichEditor';
 
 export default function AdminEditor() {
   const [title, setTitle] = useState('');
@@ -33,8 +34,8 @@ export default function AdminEditor() {
   }, []);
 
   const handleSubmit = async () => {
-    if (!title || !content) {
-       alert("Headline and content are required.");
+    if (!content) {
+       alert("Content is required.");
        return;
     }
     setLoading(true);
@@ -80,7 +81,7 @@ export default function AdminEditor() {
           <h1 className="text-xl font-bold">{id ? 'Edit post' : 'Draft new post'}</h1>
         </div>
         <button onClick={handleSubmit} disabled={loading} className="x-btn-primary px-5 py-1.5 disabled:opacity-50 text-sm">
-          {loading ? 'Posting...' : 'Post'}
+          {loading ? (id ? 'Updating...' : 'Posting...') : (id ? 'Update' : 'Post')}
         </button>
       </div>
       
@@ -92,28 +93,25 @@ export default function AdminEditor() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full bg-transparent text-foreground font-bold text-xl outline-none mb-3 placeholder:text-muted" 
-            placeholder="Headline summary..."
-            required
+            placeholder="Headline summary (Optional)"
           />
           <select 
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="w-full bg-hover-bg border border-border text-foreground rounded-lg p-2 mb-3 outline-none focus:border-accent"
           >
-            <option value="General">General</option>
-            <option value="Politics">Politics</option>
-            <option value="Tech">Tech</option>
-            <option value="Sports">Sports</option>
-            <option value="Local">Local</option>
-            <option value="World">World</option>
-            <option value="Entertainment">Entertainment</option>
+            <option value="General" className="bg-background text-foreground">General</option>
+            <option value="Politics" className="bg-background text-foreground">Politics</option>
+            <option value="Tech" className="bg-background text-foreground">Tech</option>
+            <option value="Sports" className="bg-background text-foreground">Sports</option>
+            <option value="Local" className="bg-background text-foreground">Local</option>
+            <option value="World" className="bg-background text-foreground">World</option>
+            <option value="Entertainment" className="bg-background text-foreground">Entertainment</option>
           </select>
-          <textarea 
+          <RichEditor 
             value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full bg-transparent text-foreground text-lg outline-none resize-none min-h-[200px] placeholder:text-muted leading-relaxed" 
-            placeholder="What is happening?!"
-            required
+            onChange={setContent}
+            placeholder="Write the full story here..."
           />
 
           <div className="border-t border-border mt-4 pt-4 flex items-center">

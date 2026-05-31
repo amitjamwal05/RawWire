@@ -5,8 +5,10 @@ import { ArrowLeft } from 'lucide-react';
 import { MdVerified } from 'react-icons/md';
 import ShareButtons from '@/components/ShareButtons';
 import AdminEditButton from '@/components/AdminEditButton';
+import LikeButton from '@/components/LikeButton';
 import Link from 'next/link';
 import { getApiUrl } from '@/lib/api';
+import DOMPurify from 'isomorphic-dompurify';
 
 async function getNewsData(id: string) {
   try {
@@ -60,14 +62,22 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
             {news.isUserSubmitted ? (
               <>
                 <span className="font-bold hover:underline cursor-pointer leading-tight flex items-center">
-                  {news.userName} <MdVerified className="text-pink-500 ml-1 text-[18px]" />
+                  {news.userName} 
+                  <span className="relative inline-flex items-center justify-center ml-1">
+                    <span className="absolute w-[10px] h-[10px] bg-white rounded-full"></span>
+                    <MdVerified className="text-pink-500 text-[18px] relative z-10" />
+                  </span>
                 </span>
                 <span className="text-muted text-sm">@{news.userName.toLowerCase().replace(/\s+/g, '')}</span>
               </>
             ) : (
               <>
                 <span className="font-bold hover:underline cursor-pointer leading-tight flex items-center">
-                  RawWire <MdVerified className="text-accent ml-1 text-[18px]" />
+                  RawWire 
+                  <span className="relative inline-flex items-center justify-center ml-1">
+                    <span className="absolute w-[10px] h-[10px] bg-white rounded-full"></span>
+                    <MdVerified className="text-accent text-[18px] relative z-10" />
+                  </span>
                 </span>
                 <span className="text-muted text-sm">@rawwire</span>
               </>
@@ -76,12 +86,12 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
           <AdminEditButton id={news._id} />
         </div>
 
-        {/* Content */}
         <div className="mb-4">
-          <h2 className="text-2xl font-bold mb-2 break-words">{news.title}</h2>
-          <div className="text-[17px] leading-relaxed text-foreground whitespace-pre-wrap break-words">
-            {news.content}
-          </div>
+          {news.title && <h2 className="text-3xl font-extrabold mb-4 leading-tight break-words">{news.title}</h2>}
+          <div 
+            className="prose prose-lg dark:prose-invert max-w-none break-words"
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(news.content || '') }}
+          />
         </div>
 
         {/* Media Attachment */}
@@ -114,7 +124,10 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
         <hr className="border-border w-full" />
 
         {/* Action Bar */}
-        <ShareButtons item={news} isDetail={true} />
+        <div className="flex items-center gap-8 my-2">
+          <LikeButton newsId={news._id} initialUpvotes={news.upvotes || 0} />
+          <ShareButtons item={news} isDetail={true} />
+        </div>
 
         <hr className="border-border w-full" />
       </div>

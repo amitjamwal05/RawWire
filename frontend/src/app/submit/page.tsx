@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getApiUrl } from '@/lib/api';
 import toast from 'react-hot-toast';
+import RichEditor from '@/components/RichEditor';
 
 export default function SubmitNews() {
   const router = useRouter();
@@ -73,8 +74,8 @@ export default function SubmitNews() {
   };
 
   const handleSubmit = async () => {
-    if (!title || !content) {
-      toast.error('Title and content are required');
+    if (!content) {
+      toast.error('Content is required');
       return;
     }
 
@@ -275,7 +276,7 @@ export default function SubmitNews() {
           <div className="flex flex-col gap-4 h-full">
             <input
               type="text"
-              placeholder="Title"
+              placeholder="Title (Optional)"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="bg-transparent border-none text-2xl font-bold outline-none placeholder:text-muted py-2 w-full"
@@ -286,20 +287,19 @@ export default function SubmitNews() {
               onChange={(e) => setCategory(e.target.value)}
               className="w-full bg-hover-bg border border-border text-foreground rounded-xl p-3 mb-2 outline-none focus:border-accent"
             >
-              <option value="General">General</option>
-              <option value="Politics">Politics</option>
-              <option value="Tech">Tech</option>
-              <option value="Sports">Sports</option>
-              <option value="Local">Local</option>
-              <option value="World">World</option>
-              <option value="Entertainment">Entertainment</option>
+              <option value="General" className="bg-background text-foreground">General</option>
+              <option value="Politics" className="bg-background text-foreground">Politics</option>
+              <option value="Tech" className="bg-background text-foreground">Tech</option>
+              <option value="Sports" className="bg-background text-foreground">Sports</option>
+              <option value="Local" className="bg-background text-foreground">Local</option>
+              <option value="World" className="bg-background text-foreground">World</option>
+              <option value="Entertainment" className="bg-background text-foreground">Entertainment</option>
             </select>
             
-            <textarea
-              placeholder="What's happening?"
+            <RichEditor
               value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="bg-transparent border-none text-lg outline-none placeholder:text-muted resize-none min-h-[200px] w-full"
+              onChange={setContent}
+              placeholder="What's happening?"
             />
 
             {preview && (

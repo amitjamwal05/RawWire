@@ -5,13 +5,13 @@ import ShareButtons from './ShareButtons';
 import AdminEditButton from './AdminEditButton';
 import LikeButton from './LikeButton';
 import { Pin } from 'lucide-react';
+import { getTimeAgo } from '@/lib/utils';
+import DOMPurify from 'isomorphic-dompurify';
 
 export default function NewsCard({ item }: { item: any }) {
   const isVideo = item.mediaType === 'video';
   
-  // Format date to look like "Jan 14"
-  const date = new Date(item.createdAt);
-  const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const formattedDate = getTimeAgo(item.createdAt);
 
   return (
     <div className="block w-full border-b border-border x-hover cursor-pointer transition-colors p-4">
@@ -46,14 +46,22 @@ export default function NewsCard({ item }: { item: any }) {
             {item.isUserSubmitted ? (
               <div className="flex flex-col sm:flex-row sm:items-center gap-0 sm:gap-1.5">
                 <Link href={`/user/${item.userName}`} className="font-bold text-foreground hover:underline flex items-center">
-                  {item.userName} <MdVerified className="text-pink-500 ml-1 text-[18px]" />
+                  {item.userName} 
+                  <span className="relative inline-flex items-center justify-center ml-1">
+                    <span className="absolute w-[10px] h-[10px] bg-white rounded-full"></span>
+                    <MdVerified className="text-pink-500 text-[18px] relative z-10" />
+                  </span>
                 </Link>
                 <Link href={`/user/${item.userName}`} className="text-muted hover:underline">@{item.userName.toLowerCase().replace(/\s+/g, '')}</Link>
               </div>
             ) : (
               <div className="flex items-center gap-1.5">
                 <span className="font-bold text-foreground flex items-center">
-                  RawWire <MdVerified className="text-accent ml-1 text-[18px]" />
+                  RawWire 
+                  <span className="relative inline-flex items-center justify-center ml-1">
+                    <span className="absolute w-[10px] h-[10px] bg-white rounded-full"></span>
+                    <MdVerified className="text-accent text-[18px] relative z-10" />
+                  </span>
                 </span>
                 <span className="text-muted">@rawwire</span>
               </div>
@@ -73,18 +81,19 @@ export default function NewsCard({ item }: { item: any }) {
 
           {/* Text Body */}
           <Link href={`/news/${item._id}`} className="text-[15px] leading-normal text-foreground mb-3 block">
+            {item.title && (
+              <div 
+                className="font-bold text-lg mb-1 break-words overflow-hidden text-ellipsis"
+                style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}
+              >
+                {item.title}
+              </div>
+            )}
             <div 
-              className="font-bold text-lg mb-1 break-words overflow-hidden text-ellipsis"
-              style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}
-            >
-              {item.title}
-            </div>
-            <div 
-              className="text-muted-foreground break-words whitespace-pre-wrap overflow-hidden text-ellipsis"
+              className="text-muted-foreground break-words overflow-hidden text-ellipsis prose prose-sm dark:prose-invert max-w-none"
               style={{ display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical' }}
-            >
-              {item.content}
-            </div>
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.content || '') }}
+            />
           </Link>
 
           {/* Media Attachment */}

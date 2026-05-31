@@ -175,13 +175,13 @@ router.get('/analytics', async (req, res) => {
         { isApproved: true }
       ]
     };
-    const liveNews = await News.find(liveQuery).sort({ createdAt: -1 }).select('title views createdAt isPinned');
+    const liveNews = await News.find(liveQuery).sort({ createdAt: -1 }).select('title views createdAt isPinned category');
     
     const abandonedQuery = {
       isUserSubmitted: true,
       isPaid: false
     };
-    const abandonedNews = await News.find(abandonedQuery).sort({ createdAt: -1 }).select('title views createdAt');
+    const abandonedNews = await News.find(abandonedQuery).sort({ createdAt: -1 }).select('title views createdAt category');
 
     const today = new Date().toISOString().split('T')[0];
     const dailyAnalytics = await Analytics.findOne({ date: today });

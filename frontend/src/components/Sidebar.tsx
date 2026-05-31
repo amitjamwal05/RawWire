@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Home, ShieldAlert, Moon, Sun, Feather, PenTool } from 'lucide-react';
+import { Home, ShieldAlert, Moon, Sun, Feather, PenTool, Plus } from 'lucide-react';
 import { MdVerified } from 'react-icons/md';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
@@ -69,7 +69,7 @@ export default function Sidebar() {
         {/* Admin Post Button */}
         {isAdmin && (
           <Link href="/admin/editor" className="hidden sm:flex mt-6 w-14 h-14 xl:w-[90%] xl:h-auto items-center justify-center x-btn-primary xl:py-4">
-            <Feather size={24} className="xl:hidden" />
+            <Plus size={28} className="xl:hidden" />
             <span className="hidden xl:inline text-xl">Post</span>
           </Link>
         )}
@@ -79,7 +79,11 @@ export default function Sidebar() {
           <Image src="/logo.png" alt="RawWire" width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0" />
           <div className="hidden xl:flex flex-col ml-3">
             <span className="font-bold text-sm leading-tight flex items-center">
-              RawWire <MdVerified className="text-accent ml-1 text-[16px]" />
+              RawWire 
+              <span className="relative inline-flex items-center justify-center ml-1">
+                <span className="absolute w-[8px] h-[8px] bg-white rounded-full"></span>
+                <MdVerified className="text-accent text-[16px] relative z-10" />
+              </span>
             </span>
             <span className="text-muted text-sm">@rawwire</span>
           </div>
@@ -89,9 +93,9 @@ export default function Sidebar() {
       {/* Mobile Floating Action Button (FAB) */}
       <Link 
         href={isAdmin ? "/admin/editor" : "/submit"} 
-        className="sm:hidden fixed bottom-[72px] right-4 w-14 h-14 bg-accent text-white rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(29,155,240,0.5)] z-50 hover:bg-accent-hover transition-colors"
+        className="sm:hidden fixed bottom-[72px] right-4 w-14 h-14 bg-accent text-white rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(147,51,234,0.5)] z-50 hover:bg-accent-hover transition-colors"
       >
-        <Feather size={26} />
+        <Plus size={30} />
       </Link>
     </>
   );

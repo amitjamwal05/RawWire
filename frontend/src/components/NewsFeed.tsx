@@ -34,7 +34,9 @@ export default function NewsFeed({ initialNews, totalPages, currentCategory }: {
     <div className="w-full flex flex-col pb-[100px] sm:pb-0">
       {news.length === 0 ? (
         <div className="p-8 text-center text-muted text-lg">
-          Welcome to your timeline! Admin hasn&apos;t posted any news yet.
+          {currentCategory && currentCategory !== 'All' 
+            ? `No news has been posted in the ${currentCategory} category yet.` 
+            : `Welcome to your timeline! No news has been posted yet.`}
         </div>
       ) : (
         news.map((item: any) => (

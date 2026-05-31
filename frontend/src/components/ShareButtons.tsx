@@ -10,14 +10,14 @@ export default function ShareButtons({ item, isDetail = false }: { item: any, is
     e.stopPropagation();
     
     const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/news/${item._id}` : '';
-    const shareTitle = item.title;
+    const shareTitle = item.title || 'Breaking News on RawWire';
 
     if (platform === 'twitter') {
-      window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`, '_blank');
+      window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`, '_blank', 'noopener,noreferrer');
     } else if (platform === 'facebook') {
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank', 'noopener,noreferrer');
     } else if (platform === 'whatsapp') {
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareTitle + ' ' + shareUrl)}`, '_blank');
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareTitle + ' ' + shareUrl)}`, '_blank', 'noopener,noreferrer');
     } else if (platform === 'native') {
       if (navigator.share) {
         navigator.share({
@@ -29,7 +29,6 @@ export default function ShareButtons({ item, isDetail = false }: { item: any, is
         toast.success('Link copied to clipboard!');
       }
     } else if (platform === 'instagram') {
-      // Instagram web doesn't have a direct share URL, fallback to copying link
       navigator.clipboard.writeText(shareUrl);
       toast.success('Link copied! You can now paste it in Instagram.');
     }

@@ -197,10 +197,15 @@ export default function AdminDashboard() {
                 stats.newsStats?.map((news: any, index: number) => (
                   <div key={news._id} className={`flex items-center justify-between p-4 hover:bg-hover-bg transition-colors ${index !== stats.newsStats.length - 1 ? 'border-b border-border' : ''}`}>
                     <div className="flex flex-col">
-                      <span className="font-bold text-foreground mb-1">{news.title}</span>
-                      <div className="flex gap-4 text-sm text-muted">
+                      <span className="font-bold text-foreground mb-1">{news.title || 'Untitled Post'}</span>
+                      <div className="flex items-center gap-4 text-sm text-muted">
                         <span>{news.views} Views</span>
                         <span>{new Date(news.createdAt).toLocaleDateString()}</span>
+                        {news.category && news.category !== 'General' && (
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-full border border-border text-muted-foreground bg-hover-bg uppercase tracking-wide">
+                            {news.category}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div className="flex gap-2">

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --color-background: var(--background);
@@ -16,8 +17,8 @@
   --foreground: #0F1419;
   --muted: #536471;
   --border: #EFF3F4;
-  --accent: #1D9BF0;
-  --accent-hover: #1A8CD8;
+  --accent: #9333EA;
+  --accent-hover: #7E22CE;
   --hover-bg: rgba(15, 20, 25, 0.1);
 }
 
@@ -61,3 +62,43 @@ body {
 /* Hide Next.js Development Indicators */
 nextjs-portal { display: none !important; }
 
+/* React Quill Dark Mode Fixes */
+.editor-container .ql-toolbar {
+  border-color: var(--border);
+  background-color: var(--hover-bg);
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.editor-container .ql-container {
+  border-color: var(--border);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.125rem;
+  background-color: transparent;
+  color: var(--foreground);
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  min-height: 200px;
+}
+
+.editor-container .ql-editor.ql-blank::before {
+  color: var(--muted);
+  font-style: normal;
+}
+
+.editor-container .ql-stroke {
+  stroke: var(--foreground) !important;
+}
+
+.editor-container .ql-fill {
+  fill: var(--foreground) !important;
+}
+
+.editor-container .ql-picker {
+  color: var(--foreground) !important;
+}
+
+.editor-container .ql-picker-options {
+  background-color: var(--background) !important;
+  border-color: var(--border) !important;
+}
