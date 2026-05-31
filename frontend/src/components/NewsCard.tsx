@@ -72,7 +72,8 @@ export default function NewsCard({ item }: { item: any }) {
               <>
                 <span className="text-muted hidden sm:inline">·</span>
                 <span className="text-xs font-bold px-2 py-0.5 rounded-full border border-border text-muted-foreground bg-hover-bg uppercase tracking-wide">
-                  {item.category}
+                  <span className="sm:hidden">{item.category.substring(0, 3)}</span>
+                  <span className="hidden sm:inline">{item.category}</span>
                 </span>
               </>
             )}
