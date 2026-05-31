@@ -8,7 +8,7 @@ import AdminEditButton from '@/components/AdminEditButton';
 import LikeButton from '@/components/LikeButton';
 import Link from 'next/link';
 import { getApiUrl } from '@/lib/api';
-import DOMPurify from 'isomorphic-dompurify';
+import sanitizeHtml from 'sanitize-html';
 
 async function getNewsData(id: string) {
   try {
@@ -28,9 +28,9 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
     notFound();
   }
 
-  const date = new Date(news.createdAt);
-  const timeString = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-  const dateString = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const date = news.createdAt ? new Date(news.createdAt) : new Date();
+  const timeString = isNaN(date.getTime()) ? '' : date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const dateString = isNaN(date.getTime()) ? '' : date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   return (
     <div className="w-full flex flex-col min-h-screen">
@@ -90,7 +90,7 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
           {news.title && <h2 className="text-3xl font-extrabold mb-4 leading-tight break-words">{news.title}</h2>}
           <div 
             className="prose prose-lg dark:prose-invert max-w-none break-words"
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(news.content || '') }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(news.content || '') }}
           />
         </div>
 

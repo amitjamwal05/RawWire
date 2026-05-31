@@ -6,7 +6,7 @@ import AdminEditButton from './AdminEditButton';
 import LikeButton from './LikeButton';
 import { Pin } from 'lucide-react';
 import { getTimeAgo } from '@/lib/utils';
-import DOMPurify from 'isomorphic-dompurify';
+import sanitizeHtml from 'sanitize-html';
 
 export default function NewsCard({ item }: { item: any }) {
   const isVideo = item.mediaType === 'video';
@@ -92,7 +92,7 @@ export default function NewsCard({ item }: { item: any }) {
             <div 
               className="text-muted-foreground break-words overflow-hidden text-ellipsis prose prose-sm dark:prose-invert max-w-none"
               style={{ display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical' }}
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.content || '') }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content || '') }}
             />
           </Link>
 
