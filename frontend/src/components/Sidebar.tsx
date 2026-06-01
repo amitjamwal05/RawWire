@@ -26,10 +26,10 @@ export default function Sidebar() {
       <div className="fixed bottom-0 left-0 w-full bg-background border-t border-border z-50 sm:top-0 sm:w-[80px] xl:w-[275px] sm:h-screen sm:border-t-0 sm:border-r sm:flex sm:flex-col items-center xl:items-start xl:pl-8 py-2 sm:py-4 flex justify-around sm:justify-start">
         
         {/* Logo (Hidden on mobile) */}
-        <Link href="/" className="hidden sm:flex w-14 h-14 xl:w-auto xl:h-auto rounded-full x-hover items-center justify-center xl:justify-start xl:p-3 xl:-ml-3 mb-2">
-          <h1 className="text-3xl font-black tracking-tighter">
-            <span className="hidden xl:inline">RawWire</span>
-            <span className="xl:hidden">RW</span>
+        <Link href="/" className="hidden sm:flex w-14 h-14 xl:w-auto xl:h-auto rounded-full x-hover items-center justify-center xl:justify-start xl:p-3 xl:-ml-3 mb-2 gap-3">
+          <Image src="/logo.png" alt="RawWire" width={36} height={36} className="w-9 h-9 rounded-full flex-shrink-0" />
+          <h1 className="text-3xl font-black tracking-tighter hidden xl:block">
+            RawWire
           </h1>
         </Link>
 
