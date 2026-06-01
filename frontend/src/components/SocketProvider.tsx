@@ -49,6 +49,28 @@ export default function SocketProvider({ children }: { children: React.ReactNode
       );
     });
 
+    socketInstance.on('post_deleted', (data) => {
+      const currentPath = window.location.pathname;
+      if (currentPath === `/news/${data.newsId}`) {
+        // If they are currently reading the deleted post, kick them to home
+        window.location.replace('/');
+      } else {
+        // Otherwise just show a toast so they know a post vanished
+        toast(
+          (t) => (
+            <div className="flex flex-col gap-2">
+              <span className="font-bold text-red-500">Post Removed</span>
+              <span className="text-[14px] leading-tight">An admin just deleted a post.</span>
+              <button onClick={() => { window.location.reload(); toast.dismiss(t.id); }} className="text-xs bg-white/10 p-2 rounded hover:bg-white/20">
+                Refresh Feed
+              </button>
+            </div>
+          ),
+          { duration: 5000, position: 'bottom-right', style: { background: '#1e1e1e', color: '#fff' } }
+        );
+      }
+    });
+
     setSocket(socketInstance);
 
     return () => {

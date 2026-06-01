@@ -127,6 +127,11 @@ router.post('/view/:id', async (req, res) => {
     }
     await analytics.save();
 
+    // Broadcast live view count to all clients
+    if (req.app.get('io')) {
+      req.app.get('io').emit('view_count_changed', { newsId: news._id.toString(), views: news.views });
+    }
+
     res.json({ success: true, views: news.views, dailyTotal: analytics.totalViews });
   } catch (error) {
     res.status(500).json({ message: error.message });

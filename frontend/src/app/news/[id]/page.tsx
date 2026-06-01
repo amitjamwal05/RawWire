@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { getApiUrl } from '@/lib/api';
 import sanitizeHtml from 'sanitize-html';
 import ClientDate from '@/components/ClientDate';
+import LiveViewCounter from '@/components/LiveViewCounter';
 
 async function getNewsData(id: string) {
   try {
@@ -112,7 +113,7 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
         <div className="flex items-center gap-1 text-[15px] text-muted mb-4">
           <ClientDate isoString={news.createdAt || new Date().toISOString()} />
           <span>·</span>
-          <span className="font-bold text-foreground">{news.views || 0}</span>
+          <span className="font-bold text-foreground"><LiveViewCounter newsId={news._id} initialViews={news.views || 0} /></span>
           <span>Views</span>
         </div>
 

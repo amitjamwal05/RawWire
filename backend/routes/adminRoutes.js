@@ -171,6 +171,12 @@ router.delete('/news/:id', async (req, res) => {
     }
 
     await news.deleteOne();
+
+    // Broadcast to all clients
+    if (req.app.get('io')) {
+      req.app.get('io').emit('post_deleted', { newsId: req.params.id });
+    }
+
     res.json({ message: 'News removed' });
   } catch (error) {
     res.status(500).json({ message: error.message });
