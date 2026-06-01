@@ -90,7 +90,7 @@ export default function NewsCard({ item }: { item: any }) {
               </div>
             )}
             <div 
-              className="break-words overflow-hidden text-ellipsis prose prose-sm dark:prose-invert max-w-none"
+              className="break-words overflow-hidden text-ellipsis prose dark:prose-invert max-w-none"
               style={{ display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical' }}
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content || '') }}
             />
