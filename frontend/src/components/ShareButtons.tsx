@@ -3,6 +3,7 @@
 import { BarChart2, Share } from 'lucide-react';
 import { FaXTwitter, FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa6';
 import toast from 'react-hot-toast';
+import LiveViewCounter from '@/components/LiveViewCounter';
 
 export default function ShareButtons({ item, isDetail = false }: { item: any, isDetail?: boolean }) {
   const handleShare = (e: React.MouseEvent, platform: string) => {
@@ -47,7 +48,7 @@ export default function ShareButtons({ item, isDetail = false }: { item: any, is
       {!isDetail && (
         <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="flex items-center gap-2 hover:text-blue-500 group transition-colors cursor-default">
           <div className="p-2 rounded-full group-hover:bg-blue-500/10"><BarChart2 size={iconSize} /></div>
-          <span className="text-sm">{item.views || 0}</span>
+          <span className="text-sm"><LiveViewCounter newsId={item._id} initialViews={item.views || 0} /></span>
         </button>
       )}
       <button onClick={(e) => handleShare(e, 'twitter')} className="flex items-center gap-2 hover:text-gray-300 group transition-colors">
