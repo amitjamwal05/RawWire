@@ -7,6 +7,7 @@ import LikeButton from './LikeButton';
 import { Pin } from 'lucide-react';
 import { getTimeAgo } from '@/lib/utils';
 import sanitizeHtml from 'sanitize-html';
+import LiveViewCounter from '@/components/LiveViewCounter';
 
 export default function NewsCard({ item }: { item: any }) {
   const isVideo = item.mediaType === 'video';
@@ -118,6 +119,12 @@ export default function NewsCard({ item }: { item: any }) {
           {/* Action Buttons */}
           <div className="flex items-center gap-8">
             <LikeButton newsId={item._id} initialUpvotes={item.upvotes || 0} />
+            <div className="flex items-center gap-1.5 p-2 rounded-full text-muted transition-colors hover:text-blue-500 hover:bg-blue-500/10 cursor-default" title="Views">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span className="text-sm font-medium">
+                <LiveViewCounter newsId={item._id} initialViews={item.views || 0} />
+              </span>
+            </div>
             <ShareButtons item={item} />
           </div>
 
