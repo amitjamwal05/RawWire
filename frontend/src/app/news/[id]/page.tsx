@@ -9,6 +9,7 @@ import LikeButton from '@/components/LikeButton';
 import Link from 'next/link';
 import { getApiUrl } from '@/lib/api';
 import sanitizeHtml from 'sanitize-html';
+import ClientDate from '@/components/ClientDate';
 
 async function getNewsData(id: string) {
   try {
@@ -27,10 +28,6 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
   if (!news) {
     notFound();
   }
-
-  const date = news.createdAt ? new Date(news.createdAt) : new Date();
-  const timeString = isNaN(date.getTime()) ? '' : date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-  const dateString = isNaN(date.getTime()) ? '' : date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   return (
     <div className="w-full flex flex-col min-h-screen">
@@ -113,9 +110,7 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
 
         {/* Timestamp */}
         <div className="flex items-center gap-1 text-[15px] text-muted mb-4">
-          <span>{timeString}</span>
-          <span>·</span>
-          <span>{dateString}</span>
+          <ClientDate isoString={news.createdAt || new Date().toISOString()} />
           <span>·</span>
           <span className="font-bold text-foreground">{news.views || 0}</span>
           <span>Views</span>
