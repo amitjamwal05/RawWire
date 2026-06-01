@@ -27,7 +27,7 @@ export default function WeatherWidget() {
         cachedLocation = 'New York (Fallback)';
         
         setWeather(cachedWeather);
-        setLocation(cachedLocation);
+        setLocation(cachedLocation as string);
         setError(null);
       } catch (err) {
         setError('Failed to fetch weather');
@@ -60,7 +60,7 @@ export default function WeatherWidget() {
           cachedLocation = city;
           
           setWeather(cachedWeather);
-          setLocation(cachedLocation);
+          setLocation(cachedLocation as string);
           setError(null);
         } catch (err) {
           fetchFallbackWeather();
