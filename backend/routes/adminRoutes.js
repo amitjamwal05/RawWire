@@ -68,6 +68,12 @@ router.put('/news/:id/approve', async (req, res) => {
     
     news.isApproved = true;
     await news.save();
+
+    // Broadcast to all clients
+    if (req.app.get('io')) {
+      req.app.get('io').emit('new_post_alert', { title: news.title });
+    }
+
     res.json({ message: 'News approved successfully', news });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -103,6 +109,12 @@ router.post('/news', upload.single('media'), async (req, res) => {
       mediaUrl: req.file ? req.file.path : null,
       mediaType
     });
+
+    // Broadcast to all clients
+    if (req.app.get('io')) {
+      req.app.get('io').emit('new_post_alert', { title: news.title });
+    }
+
     res.status(201).json(news);
   } catch (error) {
     res.status(500).json({ message: error.message });

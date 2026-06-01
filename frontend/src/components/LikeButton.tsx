@@ -2,11 +2,13 @@
 import { useState, useEffect } from 'react';
 import { Heart } from 'lucide-react';
 import { getApiUrl } from '@/lib/api';
+import { useSocket } from '@/components/SocketProvider';
 
 export default function LikeButton({ newsId, initialUpvotes }: { newsId: string, initialUpvotes: number }) {
   const [upvotes, setUpvotes] = useState(initialUpvotes || 0);
   const [isLiked, setIsLiked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const socket = useSocket();
 
   useEffect(() => {
     // Check local storage on mount
@@ -14,7 +16,22 @@ export default function LikeButton({ newsId, initialUpvotes }: { newsId: string,
     if (likedPosts[newsId]) {
       setIsLiked(true);
     }
-  }, [newsId]);
+
+    // Listen for Real-Time Updates from WebSockets
+    if (socket) {
+      const handleUpvoteChanged = (data: { newsId: string, upvotes: number }) => {
+        if (data.newsId === newsId) {
+          setUpvotes(data.upvotes);
+        }
+      };
+
+      socket.on('upvote_changed', handleUpvoteChanged);
+
+      return () => {
+        socket.off('upvote_changed', handleUpvoteChanged);
+      };
+    }
+  }, [newsId, socket]);
 
   const toggleLike = async (e: React.MouseEvent) => {
     e.preventDefault();

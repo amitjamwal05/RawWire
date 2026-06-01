@@ -141,6 +141,12 @@ router.put('/:id/upvote', async (req, res) => {
     
     news.upvotes = (news.upvotes || 0) + 1;
     await news.save();
+    
+    // Broadcast to all clients
+    if (req.app.get('io')) {
+      req.app.get('io').emit('upvote_changed', { newsId: news._id.toString(), upvotes: news.upvotes });
+    }
+    
     res.json({ success: true, upvotes: news.upvotes });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -155,6 +161,12 @@ router.put('/:id/downvote', async (req, res) => {
     
     news.upvotes = Math.max(0, (news.upvotes || 0) - 1);
     await news.save();
+
+    // Broadcast to all clients
+    if (req.app.get('io')) {
+      req.app.get('io').emit('upvote_changed', { newsId: news._id.toString(), upvotes: news.upvotes });
+    }
+
     res.json({ success: true, upvotes: news.upvotes });
   } catch (error) {
     res.status(500).json({ message: error.message });

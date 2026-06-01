@@ -7,7 +7,28 @@ const newsRoutes = require('./routes/newsRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 
+const http = require('http');
+const { Server } = require('socket.io');
+
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: '*', // Allow all for local dev
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+  }
+});
+
+// Make io available in routes via req.app.get('io')
+app.set('io', io);
+
+io.on('connection', (socket) => {
+  console.log('Client connected:', socket.id);
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
+  });
+});
+
 const PORT = process.env.PORT || 5000;
 
 // Middleware
@@ -26,9 +47,9 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/payments', paymentRoutes);
 
 app.get('/', (req, res) => {
-  res.send('News API is running');
+  res.send('News API with Socket.io is running');
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
