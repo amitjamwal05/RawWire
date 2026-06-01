@@ -45,9 +45,37 @@ router.get('/', async (req, res) => {
 // Get Trending News
 router.get('/trending', async (req, res) => {
   try {
-    const trendingNews = await News.find({ isApproved: { $ne: false } })
-      .sort({ views: -1, upvotes: -1 })
-      .limit(5);
+    const trendingNews = await News.aggregate([
+      { $match: { isApproved: { $ne: false } } },
+      {
+        $addFields: {
+          hoursSince: {
+            $divide: [
+              { $subtract: [new Date(), "$createdAt"] },
+              1000 * 60 * 60
+            ]
+          },
+          points: {
+            $add: [
+              { $ifNull: ["$views", 0] },
+              { $multiply: [{ $ifNull: ["$upvotes", 0] }, 5] }
+            ]
+          }
+        }
+      },
+      {
+        $addFields: {
+          score: {
+            $divide: [
+              "$points",
+              { $pow: [{ $add: ["$hoursSince", 2] }, 1.5] }
+            ]
+          }
+        }
+      },
+      { $sort: { score: -1 } },
+      { $limit: 5 }
+    ]);
     res.json(trendingNews);
   } catch (error) {
     res.status(500).json({ message: error.message });
