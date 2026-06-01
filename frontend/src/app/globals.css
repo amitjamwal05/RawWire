@@ -62,6 +62,15 @@ body {
 /* Hide Next.js Development Indicators */
 nextjs-portal { display: none !important; }
 
+/* Typography Prose Color Overrides for Light/Dark Mode */
+.prose, .prose p, .prose ul, .prose ol, .prose blockquote, .prose strong, .prose a {
+  color: var(--foreground) !important;
+}
+
+.prose.prose-muted, .prose.prose-muted p, .prose.prose-muted ul, .prose.prose-muted ol, .prose.prose-muted blockquote, .prose.prose-muted strong, .prose.prose-muted a {
+  color: var(--muted) !important;
+}
+
 /* React Quill Dark Mode Fixes */
 .editor-container .ql-toolbar {
   border-color: var(--border);

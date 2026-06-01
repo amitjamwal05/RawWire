@@ -71,9 +71,8 @@ export default function NewsCard({ item }: { item: any }) {
             {item.category && item.category !== 'General' && (
               <>
                 <span className="text-muted hidden sm:inline">·</span>
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full border border-border text-muted-foreground bg-hover-bg uppercase tracking-wide">
-                  <span className="sm:hidden">{item.category.substring(0, 3)}</span>
-                  <span className="hidden sm:inline">{item.category}</span>
+                <span className="hidden sm:inline-block text-xs font-bold px-2 py-0.5 rounded-full border border-border text-muted-foreground bg-hover-bg uppercase tracking-wide">
+                  {item.category}
                 </span>
               </>
             )}
@@ -91,7 +90,7 @@ export default function NewsCard({ item }: { item: any }) {
               </div>
             )}
             <div 
-              className="text-muted-foreground break-words overflow-hidden text-ellipsis prose prose-sm dark:prose-invert max-w-none"
+              className="prose-muted break-words overflow-hidden text-ellipsis prose prose-sm dark:prose-invert max-w-none"
               style={{ display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical' }}
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content || '') }}
             />
