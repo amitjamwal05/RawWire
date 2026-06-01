@@ -10,7 +10,13 @@ export default function ShareButtons({ item, isDetail = false }: { item: any, is
     e.stopPropagation();
     
     const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/news/${item._id}` : '';
-    const shareTitle = item.title || 'Breaking News on RawWire';
+    
+    let shareText = item.title;
+    if (!shareText && item.content) {
+      const plainText = item.content.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim();
+      shareText = plainText.length > 120 ? plainText.substring(0, 120) + '...' : plainText;
+    }
+    const shareTitle = shareText || 'Breaking News on RawWire';
 
     if (platform === 'twitter') {
       window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`, '_blank', 'noopener,noreferrer');
