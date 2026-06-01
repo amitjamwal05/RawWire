@@ -4,6 +4,7 @@ import { getApiUrl } from '@/lib/api';
 import NewsFeed from '@/components/NewsFeed';
 
 import CategoryNav from '@/components/CategoryNav';
+import WeatherWidget from '@/components/WeatherWidget';
 
 async function getNewsData(category: string) {
   try {
@@ -36,6 +37,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
 
       {/* Category Navigation */}
       <CategoryNav currentCategory={currentCategory} />
+
+      {/* Mobile Weather Widget */}
+      <div className="block lg:hidden px-4 mb-2">
+        <WeatherWidget />
+      </div>
 
       <NewsFeed key={currentCategory} initialNews={initialNews} totalPages={totalPages} currentCategory={currentCategory} />
     </div>

@@ -5,8 +5,8 @@ import Sidebar from '@/components/Sidebar';
 import SearchBar from '@/components/SearchBar';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from 'react-hot-toast';
-
 import TrendingWidget from '@/components/TrendingWidget';
+import WeatherWidget from '@/components/WeatherWidget';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -43,6 +43,7 @@ export default function RootLayout({
             <aside className="hidden lg:block w-[350px] pl-8 py-4 flex-shrink-0">
               <div className="sticky top-4">
                 <SearchBar />
+                <WeatherWidget />
                 <TrendingWidget />
               </div>
             </aside>
