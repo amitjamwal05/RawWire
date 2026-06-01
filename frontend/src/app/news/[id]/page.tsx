@@ -87,7 +87,7 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
           {news.title && <h2 className="text-3xl font-extrabold mb-4 leading-tight break-words">{news.title}</h2>}
           <div 
             className="prose prose-lg dark:prose-invert max-w-none break-words"
-            dangerouslySetInnerHTML={{ __html: sanitizeHtml(news.content || '') }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml((news.content || '').replace(/&nbsp;/g, ' ')) }}
           />
         </div>
 
