@@ -117,9 +117,14 @@ export default function WeatherWidget({ compact = false }: { compact?: boolean }
 
   if (compact) {
     return (
-      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-hover-bg text-sm font-bold shadow-sm cursor-default" title={`${location} - ${getConditionText(weather.weathercode)}`}>
-        {getWeatherIcon(weather.weathercode, true)}
-        <span className="text-foreground leading-none">{Math.round(weather.temperature)}°</span>
+      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-hover-bg text-xs font-bold shadow-sm cursor-default">
+        <span className="text-muted max-w-[130px] truncate">
+          {location} - {getConditionText(weather.weathercode)}
+        </span>
+        <div className="flex items-center gap-1 text-sm">
+          {getWeatherIcon(weather.weathercode, true)}
+          <span className="text-foreground leading-none">{Math.round(weather.temperature)}°</span>
+        </div>
       </div>
     );
   }
