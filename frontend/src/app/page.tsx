@@ -33,15 +33,15 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           </Link>
           <h1 className="text-xl font-bold">Home</h1>
         </div>
+        
+        {/* Compact Mobile Weather Widget */}
+        <div className="block lg:hidden">
+          <WeatherWidget compact={true} />
+        </div>
       </div>
 
       {/* Category Navigation */}
       <CategoryNav currentCategory={currentCategory} />
-
-      {/* Mobile Weather Widget */}
-      <div className="block lg:hidden px-4 mb-2">
-        <WeatherWidget />
-      </div>
 
       <NewsFeed key={currentCategory} initialNews={initialNews} totalPages={totalPages} currentCategory={currentCategory} />
     </div>

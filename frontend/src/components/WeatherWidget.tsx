@@ -7,9 +7,9 @@ let cachedLocation: string | null = null;
 let isFetching = false;
 let fetchPromise: Promise<void> | null = null;
 
-export default function WeatherWidget() {
+export default function WeatherWidget({ compact = false }: { compact?: boolean }) {
   const [weather, setWeather] = useState<any>(cachedWeather);
-  const [location, setLocation] = useState<string>(cachedLocation || 'Detecting location...');
+  const [location, setLocation] = useState<string>(cachedLocation || 'Detecting...');
   const [loading, setLoading] = useState<boolean>(!cachedWeather);
   const [error, setError] = useState<string | null>(null);
 
@@ -76,6 +76,13 @@ export default function WeatherWidget() {
   }, []);
 
   if (loading) {
+    if (compact) {
+      return (
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-hover-bg text-xs font-bold text-muted animate-pulse">
+          <Loader2 className="animate-spin" size={14} />
+        </div>
+      );
+    }
     return (
       <div className="bg-hover-bg rounded-2xl border border-border mt-4 p-5 flex items-center justify-center gap-3 text-muted">
         <Loader2 className="animate-spin text-accent" size={20} />
@@ -87,14 +94,15 @@ export default function WeatherWidget() {
   if (error || !weather) return null;
 
   // WMO Weather interpretation codes
-  const getWeatherIcon = (code: number) => {
-    if (code === 0) return <Sun className="text-yellow-400 drop-shadow-md" size={28} />;
-    if (code <= 3) return <Cloud className="text-gray-300 drop-shadow-md" size={28} />;
-    if (code <= 48) return <Cloud className="text-gray-400 drop-shadow-md" size={28} />;
-    if (code <= 67 || (code >= 80 && code <= 82)) return <CloudRain className="text-blue-400 drop-shadow-md" size={28} />;
-    if (code <= 77 || (code >= 85 && code <= 86)) return <Snowflake className="text-blue-200 drop-shadow-md" size={28} />;
-    if (code >= 95) return <CloudLightning className="text-purple-400 drop-shadow-md" size={28} />;
-    return <Cloud className="text-gray-400 drop-shadow-md" size={28} />;
+  const getWeatherIcon = (code: number, small: boolean = false) => {
+    const size = small ? 16 : 28;
+    if (code === 0) return <Sun className="text-yellow-400 drop-shadow-md" size={size} />;
+    if (code <= 3) return <Cloud className="text-gray-300 drop-shadow-md" size={size} />;
+    if (code <= 48) return <Cloud className="text-gray-400 drop-shadow-md" size={size} />;
+    if (code <= 67 || (code >= 80 && code <= 82)) return <CloudRain className="text-blue-400 drop-shadow-md" size={size} />;
+    if (code <= 77 || (code >= 85 && code <= 86)) return <Snowflake className="text-blue-200 drop-shadow-md" size={size} />;
+    if (code >= 95) return <CloudLightning className="text-purple-400 drop-shadow-md" size={size} />;
+    return <Cloud className="text-gray-400 drop-shadow-md" size={size} />;
   };
 
   const getConditionText = (code: number) => {
@@ -106,6 +114,15 @@ export default function WeatherWidget() {
     if (code >= 95) return 'Thunderstorm';
     return 'Cloudy';
   };
+
+  if (compact) {
+    return (
+      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-hover-bg text-sm font-bold shadow-sm cursor-default" title={`${location} - ${getConditionText(weather.weathercode)}`}>
+        {getWeatherIcon(weather.weathercode, true)}
+        <span className="text-foreground leading-none">{Math.round(weather.temperature)}°</span>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gradient-to-br from-hover-bg to-background rounded-2xl border border-border mt-4 p-5 flex items-center justify-between group overflow-hidden relative shadow-sm transition-all hover:border-accent/30">
