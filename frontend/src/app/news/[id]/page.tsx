@@ -11,6 +11,7 @@ import { getApiUrl } from '@/lib/api';
 import sanitizeHtml from 'sanitize-html';
 import ClientDate from '@/components/ClientDate';
 import LiveViewCounter from '@/components/LiveViewCounter';
+import WeatherWidget from '@/components/WeatherWidget';
 
 async function getNewsData(id: string) {
   try {
@@ -35,11 +36,18 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
       <ViewTracker id={news._id} />
       
       {/* Sticky Header */}
-      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border flex items-center gap-6 px-4 py-3">
-        <Link href="/" className="p-2 rounded-full hover:bg-hover-bg transition-colors">
-          <ArrowLeft size={20} />
-        </Link>
-        <h1 className="text-xl font-bold">Post</h1>
+      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border flex items-center justify-between px-4 py-3">
+        <div className="flex items-center gap-6">
+          <Link href="/" className="p-2 rounded-full hover:bg-hover-bg transition-colors">
+            <ArrowLeft size={20} />
+          </Link>
+          <h1 className="text-xl font-bold">Post</h1>
+        </div>
+        
+        {/* Compact Mobile Weather Widget */}
+        <div className="block lg:hidden">
+          <WeatherWidget compact={true} />
+        </div>
       </div>
 
       <div className="p-4 flex flex-col border-b border-border">
