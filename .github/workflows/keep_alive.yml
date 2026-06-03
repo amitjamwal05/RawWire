@@ -1,0 +1,12 @@
+name: Keep API Alive
+
+on:
+  schedule:
+    - cron: '*/10 * * * *' # Runs every 10 minutes to be safe
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping API
+        run: curl -I https://rawwire.onrender.com/api/ping
