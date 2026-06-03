@@ -50,6 +50,11 @@ app.get('/', (req, res) => {
   res.send('News API with Socket.io is running');
 });
 
+// Ultra-lightweight endpoint specifically for cron-job.org
+app.get('/api/ping', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
