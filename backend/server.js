@@ -57,4 +57,14 @@ app.get('/api/ping', (req, res) => {
 
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  
+  // Self-ping logic to keep Render awake natively
+  const https = require('https');
+  setInterval(() => {
+    https.get('https://rawwire.onrender.com/api/ping', (res) => {
+      console.log(`Self-ping successful! Status: ${res.statusCode}`);
+    }).on('error', (err) => {
+      console.error('Self-ping failed:', err.message);
+    });
+  }, 14 * 60 * 1000); // Ping every 14 minutes
 });
