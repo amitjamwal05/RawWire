@@ -33,7 +33,7 @@ export default function AdminLogin() {
   return (
     <div className="flex justify-center items-center h-full min-h-[80vh] px-4">
       <form onSubmit={handleLogin} className="w-full max-w-[360px] flex flex-col">
-        <h1 className="text-3xl font-bold mb-2 text-foreground">Sign in to XAdmin</h1>
+        <h1 className="text-3xl font-bold mb-2 text-foreground">Sign in to RawWire Admin</h1>
         <p className="text-muted mb-8">Manage the RawWire feed</p>
         
         <input 
