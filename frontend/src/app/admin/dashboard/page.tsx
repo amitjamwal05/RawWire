@@ -149,7 +149,9 @@ export default function AdminDashboard() {
               {pendingNews.map((news: any) => (
                 <div key={news._id} className="p-4 border-b border-border last:border-b-0 hover:bg-hover-bg transition-colors flex flex-col gap-2">
                   <div className="flex flex-col">
-                    <span className="font-bold text-lg">{news.title}</span>
+                    <span className="font-bold text-lg">
+                      {news.title || (news.content ? news.content.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').substring(0, 40) + (news.content.length > 40 ? '...' : '') : 'Untitled Post')}
+                    </span>
                     <span className="text-sm text-muted">Submitted by: <span className="font-bold text-foreground">{news.userName}</span> ({news.userPhone})</span>
                     <span className="text-sm text-muted">Aadhaar: {news.userAadhaar}</span>
                   </div>
@@ -197,7 +199,9 @@ export default function AdminDashboard() {
                 stats.newsStats?.map((news: any, index: number) => (
                   <div key={news._id} className={`flex items-center justify-between p-4 hover:bg-hover-bg transition-colors ${index !== stats.newsStats.length - 1 ? 'border-b border-border' : ''}`}>
                     <div className="flex flex-col">
-                      <span className="font-bold text-foreground mb-1">{news.title || 'Untitled Post'}</span>
+                      <span className="font-bold text-foreground mb-1">
+                        {news.title || (news.content ? news.content.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').substring(0, 40) + (news.content.length > 40 ? '...' : '') : 'Untitled Post')}
+                      </span>
                       <div className="flex items-center gap-4 text-sm text-muted">
                         <span>{news.views} Views</span>
                         <span>{new Date(news.createdAt).toLocaleDateString()}</span>
@@ -231,7 +235,9 @@ export default function AdminDashboard() {
                 stats.abandonedStats?.map((news: any, index: number) => (
                   <div key={news._id} className={`flex items-center justify-between p-4 hover:bg-hover-bg transition-colors ${index !== stats.abandonedStats.length - 1 ? 'border-b border-border' : ''}`}>
                     <div className="flex flex-col">
-                      <span className="font-bold text-foreground mb-1 line-clamp-1">{news.title}</span>
+                      <span className="font-bold text-foreground mb-1 line-clamp-1">
+                        {news.title || (news.content ? news.content.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').substring(0, 40) + (news.content.length > 40 ? '...' : '') : 'Untitled Post')}
+                      </span>
                       <div className="flex gap-4 text-sm text-muted">
                         <span className="text-orange-500 font-bold">Unpaid / Abandoned</span>
                         <span>{new Date(news.createdAt).toLocaleDateString()}</span>

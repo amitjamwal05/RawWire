@@ -26,6 +26,12 @@ export default function SubmitNews() {
   const [preview, setPreview] = useState<string | null>(null);
   const [userPhoto, setUserPhoto] = useState<File | null>(null);
 
+  // OTP State
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+
   // Load Razorpay script
   useEffect(() => {
     const script = document.createElement('script');
@@ -61,9 +67,68 @@ export default function SubmitNews() {
     }
   };
 
+  const handleSendOtp = async () => {
+    if (!userEmail || !userEmail.includes('@')) {
+      toast.error('Enter a valid email address');
+      return;
+    }
+    setVerifying(true);
+    const toastId = toast.loading('Sending OTP...');
+    try {
+      const res = await fetch(`${getApiUrl()}/otp/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success('OTP sent to your email', { id: toastId });
+        setOtpSent(true);
+      } else {
+        toast.error(data.message || 'Failed to send OTP', { id: toastId });
+      }
+    } catch (err) {
+      toast.error('Network error', { id: toastId });
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!otpCode || otpCode.length !== 6) {
+      toast.error('Enter the 6-digit OTP');
+      return;
+    }
+    setVerifying(true);
+    const toastId = toast.loading('Verifying...');
+    try {
+      const res = await fetch(`${getApiUrl()}/otp/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail, otp: otpCode })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success('Email verified successfully!', { id: toastId });
+        setIsEmailVerified(true);
+        setOtpSent(false); // hide OTP input
+      } else {
+        toast.error(data.message || 'Invalid OTP', { id: toastId });
+      }
+    } catch (err) {
+      toast.error('Network error', { id: toastId });
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   const handleNext = () => {
     if (!userName || !userEmail || !userPhone || !userAadhaar) {
       toast.error('All personal details are required');
+      return;
+    }
+    if (!isEmailVerified) {
+      toast.error('You must verify your email address first');
       return;
     }
     if (userAadhaar.length !== 12 || !/^\d+$/.test(userAadhaar)) {
@@ -74,7 +139,7 @@ export default function SubmitNews() {
   };
 
   const handleSubmit = async () => {
-    if (!content) {
+    if (!content || content.trim() === '') {
       toast.error('Content is required');
       return;
     }
@@ -220,18 +285,53 @@ export default function SubmitNews() {
               onChange={(e) => setUserName(e.target.value)}
               className="bg-transparent border border-border rounded-xl p-4 text-lg outline-none focus:border-accent transition-colors w-full"
             />
-            <input
-              type="email"
-              placeholder="Email Address"
-              value={userEmail}
-              onChange={(e) => setUserEmail(e.target.value)}
-              className="bg-transparent border border-border rounded-xl p-4 text-lg outline-none focus:border-accent transition-colors w-full"
-            />
+            <div className="flex flex-col gap-2 w-full">
+              <div className="flex items-center gap-2">
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  value={userEmail}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  disabled={isEmailVerified}
+                  className={`bg-transparent border ${isEmailVerified ? 'border-green-500 bg-green-500/10 text-green-500' : 'border-border'} rounded-xl p-4 text-lg outline-none focus:border-accent transition-colors flex-1`}
+                />
+                {!isEmailVerified && (
+                  <button 
+                    onClick={handleSendOtp} 
+                    disabled={verifying || !userEmail.includes('@')}
+                    className="bg-foreground text-background font-bold rounded-xl px-6 py-4 hover:opacity-90 transition-opacity disabled:opacity-50 whitespace-nowrap"
+                  >
+                    {otpSent ? 'Resend' : 'Verify'}
+                  </button>
+                )}
+              </div>
+              {isEmailVerified && <span className="text-green-500 text-sm font-bold ml-2">✓ Verified Email Address</span>}
+            </div>
+
+            {otpSent && !isEmailVerified && (
+              <div className="flex items-center gap-2 w-full animate-in fade-in slide-in-from-top-2">
+                <input
+                  type="text"
+                  placeholder="Enter 6-digit OTP"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  className="bg-transparent border border-accent rounded-xl p-4 text-lg outline-none ring-2 ring-accent/20 transition-colors flex-1 tracking-widest text-center font-bold"
+                />
+                <button 
+                  onClick={handleVerifyOtp} 
+                  disabled={verifying || otpCode.length !== 6}
+                  className="bg-accent text-white font-bold rounded-xl px-6 py-4 hover:bg-accent/90 transition-opacity disabled:opacity-50 whitespace-nowrap"
+                >
+                  Confirm
+                </button>
+              </div>
+            )}
+
             <input
               type="tel"
               placeholder="Phone Number"
               value={userPhone}
-              onChange={(e) => setUserPhone(e.target.value)}
+              onChange={(e) => setUserPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
               className="bg-transparent border border-border rounded-xl p-4 text-lg outline-none focus:border-accent transition-colors w-full"
             />
             <input
