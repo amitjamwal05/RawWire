@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useSocket } from '@/components/SocketProvider';
 
+import { formatCompactNumber } from '@/lib/utils';
+
 export default function LiveViewCounter({ newsId, initialViews }: { newsId: string, initialViews: number }) {
   const [views, setViews] = useState(initialViews || 0);
   const socket = useSocket();
@@ -22,5 +24,5 @@ export default function LiveViewCounter({ newsId, initialViews }: { newsId: stri
     };
   }, [newsId, socket]);
 
-  return <>{views}</>;
+  return <>{formatCompactNumber(views)}</>;
 }

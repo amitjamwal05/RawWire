@@ -17,3 +17,10 @@ export function getTimeAgo(dateString: string | Date): string {
   // If older than a week, show the date like "May 31"
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
+
+export function formatCompactNumber(number: number): string {
+  return new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(number);
+}

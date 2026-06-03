@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Heart } from 'lucide-react';
 import { getApiUrl } from '@/lib/api';
 import { useSocket } from '@/components/SocketProvider';
+import { formatCompactNumber } from '@/lib/utils';
 
 export default function LikeButton({ newsId, initialUpvotes }: { newsId: string, initialUpvotes: number }) {
   const [upvotes, setUpvotes] = useState(initialUpvotes || 0);
@@ -87,7 +88,7 @@ export default function LikeButton({ newsId, initialUpvotes }: { newsId: string,
       }`}
     >
       <Heart size={20} className={isLiked ? 'fill-current' : ''} />
-      <span className="text-sm font-medium">{upvotes > 0 ? upvotes : ''}</span>
+      <span className="text-sm font-medium">{upvotes > 0 ? formatCompactNumber(upvotes) : ''}</span>
     </button>
   );
 }

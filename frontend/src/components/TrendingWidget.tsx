@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { TrendingUp } from 'lucide-react';
 import { getApiUrl } from '@/lib/api';
 import LiveViewCounter from '@/components/LiveViewCounter';
+import { formatCompactNumber } from '@/lib/utils';
 
 async function getTrendingNews() {
   try {
@@ -40,7 +41,7 @@ export default async function TrendingWidget() {
                   {news.title}
                 </span>
                 <span className="text-xs text-muted mt-1">
-                  <LiveViewCounter newsId={news._id} initialViews={news.views || 0} /> views {news.upvotes > 0 && `· ${news.upvotes} likes`}
+                  <LiveViewCounter newsId={news._id} initialViews={news.views || 0} /> views {news.upvotes > 0 && `· ${formatCompactNumber(news.upvotes)} likes`}
                 </span>
               </div>
             </div>
