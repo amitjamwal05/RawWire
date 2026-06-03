@@ -12,6 +12,7 @@ import sanitizeHtml from 'sanitize-html';
 import ClientDate from '@/components/ClientDate';
 import LiveViewCounter from '@/components/LiveViewCounter';
 import WeatherWidget from '@/components/WeatherWidget';
+import { Metadata, ResolvingMetadata } from 'next';
 
 async function getNewsData(id: string) {
   try {
@@ -23,6 +24,54 @@ async function getNewsData(id: string) {
   }
 }
 
+export async function generateMetadata(
+  { params }: { params: Promise<{ id: string }> },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const resolvedParams = await params;
+  const news = await getNewsData(resolvedParams.id);
+
+  if (!news) {
+    return { title: 'Post Not Found | RawWire' };
+  }
+
+  const title = news.title || 'RawWire News Update';
+  // Strip HTML tags for clean description
+  const cleanContent = sanitizeHtml(news.content || '', { allowedTags: [] });
+  const description = cleanContent.length > 0 ? cleanContent.substring(0, 160) + '...' : 'Read the latest breaking news on RawWire.';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rawwire.onrender.com';
+  // Use post image if available, else fallback to site logo
+  const ogImage = news.mediaType === 'image' && news.mediaUrl ? news.mediaUrl : `${siteUrl}/logo.png`;
+
+  return {
+    title: `${title} | RawWire`,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${siteUrl}/news/${news._id}`,
+      siteName: 'RawWire',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      type: 'article',
+      publishedTime: news.createdAt,
+      authors: [news.userName || 'RawWire'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImage],
+    },
+  };
+}
+
 export default async function NewsDetail({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const news = await getNewsData(resolvedParams.id);
@@ -31,8 +80,37 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
     notFound();
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rawwire.onrender.com';
+  
+  // JSON-LD structured data for Google News
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: news.title || 'RawWire News Update',
+    image: [news.mediaType === 'image' && news.mediaUrl ? news.mediaUrl : `${siteUrl}/logo.png`],
+    datePublished: news.createdAt,
+    dateModified: news.updatedAt || news.createdAt,
+    author: [{
+      '@type': 'Person',
+      name: news.userName || 'RawWire',
+      url: news.isUserSubmitted ? `${siteUrl}/user/${news.authorId || news.userName}` : siteUrl
+    }],
+    publisher: {
+      '@type': 'Organization',
+      name: 'RawWire',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/logo.png`
+      }
+    }
+  };
+
   return (
     <div className="w-full flex flex-col min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ViewTracker id={news._id} />
       
       {/* Sticky Header */}
