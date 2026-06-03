@@ -124,7 +124,7 @@ router.post('/news', upload.single('media'), async (req, res) => {
 // Update News
 router.put('/news/:id', upload.single('media'), async (req, res) => {
   try {
-    const { title, content, category } = req.body;
+    const { title, content, category, views, upvotes } = req.body;
     let news = await News.findById(req.params.id);
     if (!news) return res.status(404).json({ message: 'News not found' });
 
@@ -132,12 +132,21 @@ router.put('/news/:id', upload.single('media'), async (req, res) => {
     news.content = content || news.content;
     news.category = category || news.category;
     
+    if (views !== undefined && views !== '') news.views = Number(views);
+    if (upvotes !== undefined && upvotes !== '') news.upvotes = Number(upvotes);
+    
     if (req.file) {
       news.mediaUrl = req.file.path;
       news.mediaType = req.file.mimetype.startsWith('video/') ? 'video' : 'image';
     }
 
     const updatedNews = await news.save();
+
+    if (req.app.get('io')) {
+      if (views !== undefined && views !== '') req.app.get('io').emit('view_count_changed', { newsId: news._id.toString(), views: news.views });
+      if (upvotes !== undefined && upvotes !== '') req.app.get('io').emit('upvote_changed', { newsId: news._id.toString(), upvotes: news.upvotes });
+    }
+
     res.json(updatedNews);
   } catch (error) {
     res.status(500).json({ message: error.message });

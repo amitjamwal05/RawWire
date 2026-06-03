@@ -12,6 +12,8 @@ export default function AdminEditor() {
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('General');
   const [file, setFile] = useState<File | null>(null);
+  const [views, setViews] = useState('');
+  const [upvotes, setUpvotes] = useState('');
   const [loading, setLoading] = useState(false);
   
   const router = useRouter();
@@ -29,6 +31,8 @@ export default function AdminEditor() {
           setTitle(data.title);
           setContent(data.content);
           if (data.category) setCategory(data.category);
+          if (data.views !== undefined) setViews(data.views.toString());
+          if (data.upvotes !== undefined) setUpvotes(data.upvotes.toString());
         });
     }
   }, []);
@@ -46,6 +50,8 @@ export default function AdminEditor() {
     formData.append('content', content);
     formData.append('category', category);
     if (file) formData.append('media', file);
+    if (views) formData.append('views', views);
+    if (upvotes) formData.append('upvotes', upvotes);
 
     const url = id ? `${getApiUrl()}/admin/news/${id}` : `${getApiUrl()}/admin/news`;
     const method = id ? 'PUT' : 'POST';
@@ -126,6 +132,34 @@ export default function AdminEditor() {
              </label>
              {file && <span className="ml-4 text-sm text-foreground bg-hover-bg px-3 py-1 rounded-md">{file.name} attached</span>}
           </div>
+
+          {id && (
+            <div className="border-t border-border mt-6 pt-4">
+              <h3 className="font-bold text-lg mb-2 flex items-center gap-2">
+                <span className="text-accent">⚡</span> Edit Stats (Admin Only)
+              </h3>
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="text-sm font-bold text-muted block mb-1">Total Views</label>
+                  <input 
+                    type="number" 
+                    value={views}
+                    onChange={(e) => setViews(e.target.value)}
+                    className="w-full bg-hover-bg border border-border text-foreground rounded-lg p-2 outline-none focus:border-accent"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="text-sm font-bold text-muted block mb-1">Total Likes</label>
+                  <input 
+                    type="number" 
+                    value={upvotes}
+                    onChange={(e) => setUpvotes(e.target.value)}
+                    className="w-full bg-hover-bg border border-border text-foreground rounded-lg p-2 outline-none focus:border-accent"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
