@@ -75,7 +75,7 @@ export default function SubmitNews() {
     setVerifying(true);
     const toastId = toast.loading('Sending OTP...');
     try {
-      const res = await fetch(`${getApiUrl()}/otp/send`, {
+      const res = await fetch(`/api/otp/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: userEmail })
@@ -102,7 +102,7 @@ export default function SubmitNews() {
     setVerifying(true);
     const toastId = toast.loading('Verifying...');
     try {
-      const res = await fetch(`${getApiUrl()}/otp/verify`, {
+      const res = await fetch(`/api/otp/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: userEmail, otp: otpCode })

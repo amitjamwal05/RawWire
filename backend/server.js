@@ -6,7 +6,6 @@ const cors = require('cors');
 const newsRoutes = require('./routes/newsRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
-const otpRoutes = require('./routes/otpRoutes');
 
 const http = require('http');
 const { Server } = require('socket.io');
@@ -46,7 +45,6 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/news', newsRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/payments', paymentRoutes);
-app.use('/api/otp', otpRoutes);
 
 app.get('/', (req, res) => {
   res.send('News API with Socket.io is running');
