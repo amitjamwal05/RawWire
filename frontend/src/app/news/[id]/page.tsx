@@ -39,18 +39,20 @@ export async function generateMetadata(
   // Strip HTML tags for clean description
   const cleanContent = sanitizeHtml(news.content || '', { allowedTags: [] });
   const description = cleanContent.length > 0 ? cleanContent.substring(0, 160) + '...' : 'Read the latest breaking news on RawWire.';
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rawwire.onrender.com';
-  // Use post image if available, else fallback to site logo
+  
+  // Use post image if available, else fallback to site logo (this needs to be an absolute URL for social sites)
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rawwire.vercel.app';
   const ogImage = news.mediaType === 'image' && news.mediaUrl ? news.mediaUrl : `${siteUrl}/logo.png`;
 
   return {
     title: `${title} | RawWire`,
     description,
     openGraph: {
-      title,
+      title: `${title} | RawWire`,
       description,
       url: `${siteUrl}/news/${news._id}`,
       siteName: 'RawWire',
+      type: 'article',
       images: [
         {
           url: ogImage,
@@ -59,13 +61,10 @@ export async function generateMetadata(
           alt: title,
         },
       ],
-      type: 'article',
-      publishedTime: news.createdAt,
-      authors: [news.userName || 'RawWire'],
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      title: `${title} | RawWire`,
       description,
       images: [ogImage],
     },

@@ -16,8 +16,31 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://rawwire.vercel.app'),
   title: 'RawWire',
   description: 'Breaking News delivered fast.',
+  openGraph: {
+    title: 'RawWire',
+    description: 'Breaking News delivered fast.',
+    url: '/',
+    siteName: 'RawWire',
+    images: [
+      {
+        url: '/logo.png', // Must be in public folder
+        width: 1200,
+        height: 630,
+        alt: 'RawWire Logo',
+      },
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'RawWire',
+    description: 'Breaking News delivered fast.',
+    images: ['/logo.png'],
+    creator: '@rawwire',
+  },
 };
 
 export default function RootLayout({
