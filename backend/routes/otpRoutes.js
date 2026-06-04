@@ -39,7 +39,9 @@ router.post('/send', async (req, res) => {
     // Only attempt to send if environment variables are configured
     if (process.env.EMAIL_USER && process.env.EMAIL_APP_PASSWORD) {
       const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_APP_PASSWORD
