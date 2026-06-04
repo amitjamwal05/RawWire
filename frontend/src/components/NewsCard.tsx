@@ -52,7 +52,7 @@ export default function NewsCard({ item }: { item: any }) {
                     <MdVerified className="text-pink-500 text-[18px] relative z-10" />
                   </span>
                 </Link>
-                <Link href={`/user/${item.userName}`} className="text-muted hover:underline">@{item.userName.toLowerCase().replace(/\s+/g, '')}</Link>
+                <Link href={`/user/${item.userName}`} className="text-muted hover:underline">{item.userEmail || `@${item.userName.toLowerCase().replace(/\s+/g, '')}`}</Link>
               </div>
             ) : (
               <div className="flex items-center gap-1.5">
