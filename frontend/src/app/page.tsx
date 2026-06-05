@@ -5,6 +5,7 @@ import NewsFeed from '@/components/NewsFeed';
 
 import CategoryNav from '@/components/CategoryNav';
 import WeatherWidget from '@/components/WeatherWidget';
+import PushButton from '@/components/PushButton';
 
 async function getNewsData(category: string) {
   try {
@@ -38,6 +39,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
         <div className="block lg:hidden">
           <WeatherWidget compact={true} />
         </div>
+      </div>
+
+      {/* Mobile Push Button (Hidden on Desktop because it's in the right sidebar) */}
+      <div className="block lg:hidden px-4 py-3 border-b border-border">
+        <PushButton />
       </div>
 
       {/* Category Navigation */}
