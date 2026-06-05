@@ -150,6 +150,11 @@ router.put('/news/:id', upload.single('media'), async (req, res) => {
       news.mediaType = req.file.mimetype.startsWith('video/') ? 'video' : 'image';
     }
 
+    // Regenerate AI Summary if content changed or if it doesn't exist
+    if (content && (!news.aiSummary || news.aiSummary.length === 0 || news.content !== content)) {
+      news.aiSummary = await generateAiSummary(content);
+    }
+
     const updatedNews = await news.save();
 
     if (req.app.get('io')) {
