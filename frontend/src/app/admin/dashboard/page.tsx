@@ -129,7 +129,7 @@ export default function AdminDashboard() {
                 const res = await fetch(`${getApiUrl()}/push/send`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ title, body, url: process.env.NEXT_PUBLIC_SITE_URL || 'https://rawwire.vercel.app' })
+                  body: JSON.stringify({ title, body, url: process.env.NEXT_PUBLIC_SITE_URL || 'https://raw-wire.vercel.app' })
                 });
                 if (res.ok) toast.success('Alerts sent successfully!', { id: toastId });
                 else toast.error('Failed to send alerts', { id: toastId });

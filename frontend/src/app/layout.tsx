@@ -21,7 +21,7 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://rawwire.vercel.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://raw-wire.vercel.app'),
   title: 'RawWire',
   description: 'Breaking News delivered fast.',
   manifest: '/manifest.json',

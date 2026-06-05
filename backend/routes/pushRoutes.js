@@ -37,7 +37,7 @@ router.post('/send', async (req, res) => {
     const payload = JSON.stringify({
       title,
       body,
-      url: url || 'https://rawwire.vercel.app'
+      url: url || 'https://raw-wire.vercel.app'
     });
     
     const subscriptions = await PushSubscription.find({});
