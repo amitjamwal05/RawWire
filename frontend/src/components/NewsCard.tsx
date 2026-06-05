@@ -4,7 +4,7 @@ import { MdVerified } from 'react-icons/md';
 import ShareButtons from './ShareButtons';
 import AdminEditButton from './AdminEditButton';
 import LikeButton from './LikeButton';
-import { Pin } from 'lucide-react';
+import { Pin, Sparkles } from 'lucide-react';
 import { getTimeAgo } from '@/lib/utils';
 import sanitizeHtml from 'sanitize-html';
 
@@ -95,6 +95,22 @@ export default function NewsCard({ item }: { item: any }) {
               dangerouslySetInnerHTML={{ __html: sanitizeHtml((item.content || '').replace(/&nbsp;/g, ' ')) }}
             />
           </Link>
+
+          {/* AI Summary */}
+          {item.aiSummary && item.aiSummary.length > 0 && (
+            <Link href={`/news/${item._id}`} className="block mb-3">
+              <div className="bg-gradient-to-br from-accent/5 to-transparent border border-accent/20 rounded-xl p-3 hover:border-accent/40 transition-colors shadow-sm">
+                <div className="flex items-center gap-1.5 font-bold text-accent text-xs uppercase tracking-wide mb-2">
+                  <Sparkles size={14} /> AI TL;DR
+                </div>
+                <ul className="list-disc list-inside text-sm space-y-1.5 text-foreground/90 marker:text-accent/50">
+                  {item.aiSummary.map((bullet: string, idx: number) => (
+                    <li key={idx} className="leading-snug">{bullet}</li>
+                  ))}
+                </ul>
+              </div>
+            </Link>
+          )}
 
           {/* Media Attachment */}
           {item.mediaUrl && (

@@ -1,7 +1,7 @@
 import ViewTracker from '@/components/ViewTracker';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Sparkles } from 'lucide-react';
 import { MdVerified } from 'react-icons/md';
 import ShareButtons from '@/components/ShareButtons';
 import AdminEditButton from '@/components/AdminEditButton';
@@ -180,6 +180,21 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
 
         <div className="mb-4">
           {news.title && <h2 className="text-3xl font-extrabold mb-4 leading-tight break-words">{news.title}</h2>}
+          
+          {/* AI Summary */}
+          {news.aiSummary && news.aiSummary.length > 0 && (
+            <div className="bg-gradient-to-br from-accent/5 to-transparent border border-accent/20 rounded-xl p-4 mb-6 shadow-sm">
+              <div className="flex items-center gap-2 font-bold text-accent text-sm uppercase tracking-wide mb-3">
+                <Sparkles size={16} /> AI TL;DR
+              </div>
+              <ul className="list-disc list-inside text-base space-y-2 text-foreground/90 marker:text-accent/50">
+                {news.aiSummary.map((bullet: string, idx: number) => (
+                  <li key={idx} className="leading-snug">{bullet}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div 
             className="prose prose-lg dark:prose-invert max-w-none break-words"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml((news.content || '').replace(/&nbsp;/g, ' ')) }}

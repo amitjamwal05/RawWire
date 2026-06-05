@@ -9,6 +9,10 @@ const newsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  aiSummary: {
+    type: [String],
+    default: []
+  },
   mediaUrl: {
     type: String,
   },

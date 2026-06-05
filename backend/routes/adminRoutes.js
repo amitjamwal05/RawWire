@@ -7,6 +7,7 @@ const Analytics = require('../models/Analytics');
 const upload = require('../middleware/upload');
 const { protect } = require('../middleware/auth');
 const rateLimit = require('express-rate-limit');
+const { generateAiSummary } = require('../utils/ai');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -67,6 +68,12 @@ router.put('/news/:id/approve', async (req, res) => {
     if (!news) return res.status(404).json({ message: 'News not found' });
     
     news.isApproved = true;
+    
+    // Generate AI Summary if not already generated
+    if (!news.aiSummary || news.aiSummary.length === 0) {
+      news.aiSummary = await generateAiSummary(news.content);
+    }
+    
     await news.save();
 
     // Broadcast to all clients
@@ -102,12 +109,15 @@ router.post('/news', upload.single('media'), async (req, res) => {
     let mediaType = 'image';
     if (req.file && req.file.mimetype.startsWith('video/')) mediaType = 'video';
     
+    const aiSummary = await generateAiSummary(content);
+
     const news = await News.create({
       title,
       content,
       category: category || 'General',
       mediaUrl: req.file ? req.file.path : null,
-      mediaType
+      mediaType,
+      aiSummary
     });
 
     // Broadcast to all clients
