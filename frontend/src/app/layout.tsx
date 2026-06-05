@@ -16,6 +16,10 @@ const inter = Inter({
   subsets: ['latin'],
 });
 
+export const viewport = {
+  themeColor: '#000000',
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://rawwire.vercel.app'),
   title: 'RawWire',
