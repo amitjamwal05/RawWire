@@ -30,6 +30,7 @@ export default function RichEditor({ value, onChange, placeholder }: RichEditorP
         value={value} 
         onChange={onChange} 
         modules={modules}
+        formats={['bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'link']}
         placeholder={placeholder}
       />
     </div>
