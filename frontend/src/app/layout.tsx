@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from 'react-hot-toast';
 import TrendingWidget from '@/components/TrendingWidget';
 import WeatherWidget from '@/components/WeatherWidget';
+import PushButton from '@/components/PushButton';
 
 import SocketProvider from '@/components/SocketProvider';
 
@@ -82,9 +83,10 @@ export default function RootLayout({
 
               {/* Right Sidebar (Search & Trending) */}
               <aside className="hidden lg:block w-[350px] pl-8 py-4 flex-shrink-0">
-                <div className="sticky top-4">
+                <div className="sticky top-4 flex flex-col gap-4">
                   <SearchBar />
                   <WeatherWidget />
+                  <PushButton />
                   <TrendingWidget />
                 </div>
               </aside>

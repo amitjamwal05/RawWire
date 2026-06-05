@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Trash2, Edit, Plus, LogOut, CheckCircle, Pin } from 'lucide-react';
+import { Trash2, Edit, Plus, LogOut, CheckCircle, Pin, Bell } from 'lucide-react';
 import { getApiUrl } from '@/lib/api';
 import toast from 'react-hot-toast';
 
@@ -117,6 +117,31 @@ export default function AdminDashboard() {
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border flex items-center justify-between px-4 py-4">
         <h1 className="text-xl font-bold">Admin Dashboard</h1>
         <div className="flex gap-2">
+          <button 
+            onClick={async () => {
+              const title = window.prompt("Enter Breaking News Alert Title:");
+              if (!title) return;
+              
+              const body = window.prompt("Enter short description:");
+              
+              const toastId = toast.loading('Sending alerts to all subscribers...');
+              try {
+                const res = await fetch(`${getApiUrl()}/push/send`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ title, body, url: process.env.NEXT_PUBLIC_SITE_URL || 'https://rawwire.vercel.app' })
+                });
+                if (res.ok) toast.success('Alerts sent successfully!', { id: toastId });
+                else toast.error('Failed to send alerts', { id: toastId });
+              } catch (e) {
+                toast.error('Network error', { id: toastId });
+              }
+            }} 
+            className="bg-accent hover:bg-accent/90 text-white rounded-full p-2 transition-colors flex items-center justify-center shadow-[0_0_10px_rgba(244,63,94,0.3)]"
+            title="Send Breaking News Alert"
+          >
+            <Bell size={20} />
+          </button>
           <Link href="/admin/editor" className="bg-accent hover:bg-accent/90 text-white rounded-full p-2 transition-colors">
             <Plus size={20} />
           </Link>

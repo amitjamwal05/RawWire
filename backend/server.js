@@ -45,6 +45,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/news', newsRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/push', require('./routes/pushRoutes'));
 
 app.get('/', (req, res) => {
   res.send('News API with Socket.io is running');
