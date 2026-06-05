@@ -238,6 +238,33 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                     <div className="flex gap-2">
+                      <button 
+                        onClick={async () => {
+                          const title = news.title || (news.content ? news.content.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').substring(0, 40) + '...' : 'Untitled Post');
+                          if (!window.confirm(`Broadcast "${title}" to all subscribers?`)) return;
+                          
+                          const toastId = toast.loading('Broadcasting to all subscribers...');
+                          try {
+                            const res = await fetch(`${getApiUrl()}/push/send`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ 
+                                title: "🚨 Breaking News", 
+                                body: title,
+                                url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://raw-wire.vercel.app'}/news/${news._id}` 
+                              })
+                            });
+                            if (res.ok) toast.success('Broadcast sent successfully!', { id: toastId });
+                            else toast.error('Failed to send broadcast', { id: toastId });
+                          } catch (e) {
+                            toast.error('Network error', { id: toastId });
+                          }
+                        }} 
+                        className="p-2 text-muted hover:text-green-500 hover:bg-green-500/10 rounded-full transition-colors border border-transparent hover:border-green-500/20"
+                        title="Broadcast to all subscribers"
+                      >
+                        <Bell size={20} />
+                      </button>
                       <button onClick={() => handlePin(news._id, news.isPinned)} className={`p-2 rounded-full transition-colors border border-transparent ${news.isPinned ? 'text-accent bg-accent/20 border-accent/20' : 'text-muted hover:text-accent hover:bg-accent/10 hover:border-accent/20'}`}>
                         <Pin size={20} className={news.isPinned ? 'fill-current rotate-45' : ''} />
                       </button>
