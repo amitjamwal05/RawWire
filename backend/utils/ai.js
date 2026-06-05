@@ -1,7 +1,10 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+require('dotenv').config();
+const OpenAI = require('openai');
 
-// Initialize the Gemini API client
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Initialize the OpenAI API client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 /**
  * Summarizes news content into exactly 3 bullet points.
@@ -12,8 +15,6 @@ async function generateAiSummary(content) {
   if (!content || content.length < 100) return []; // Don't summarize very short posts
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    
     const prompt = `
       You are a professional news editor. I will provide you with the content of a news article.
       Your job is to read it and extract the 3 most important key takeaways.
@@ -28,9 +29,13 @@ async function generateAiSummary(content) {
       ${content.replace(/<[^>]+>/g, '')}
     `;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.5,
+    });
+
+    const text = response.choices[0].message.content;
     
     // Split by double newline and clean up
     let bullets = text.split('\n\n')
