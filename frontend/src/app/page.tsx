@@ -35,15 +35,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           <h1 className="text-xl font-bold">Home</h1>
         </div>
         
-        {/* Compact Mobile Weather Widget */}
-        <div className="block lg:hidden">
+        {/* Compact Mobile Widgets */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <PushButton compact={true} />
           <WeatherWidget compact={true} />
         </div>
-      </div>
-
-      {/* Mobile Push Button (Hidden on Desktop because it's in the right sidebar) */}
-      <div className="block lg:hidden px-4 py-3 border-b border-border">
-        <PushButton />
       </div>
 
       {/* Category Navigation */}

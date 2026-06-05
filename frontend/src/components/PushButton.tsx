@@ -5,7 +5,7 @@ import { subscribeToPushNotifications } from '@/lib/push';
 import { Bell, BellRing } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-export default function PushButton() {
+export default function PushButton({ compact = false }: { compact?: boolean }) {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -44,6 +44,23 @@ export default function PushButton() {
       setLoading(false);
     }
   };
+
+  if (compact) {
+    return (
+      <button
+        onClick={handleSubscribe}
+        disabled={loading || isSubscribed}
+        className={`p-2 rounded-full transition-colors flex items-center justify-center ${
+          isSubscribed
+            ? 'bg-accent/10 text-accent cursor-default border border-transparent'
+            : 'bg-transparent border border-border text-foreground hover:border-accent/50 hover:text-accent shadow-sm'
+        }`}
+        title="Enable Breaking Alerts"
+      >
+        {isSubscribed ? <BellRing size={16} /> : <Bell size={16} />}
+      </button>
+    );
+  }
 
   return (
     <button
