@@ -24,7 +24,7 @@ export default function ShareButtons({ item, isDetail = false }: { item: any, is
     } else if (platform === 'facebook') {
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank', 'noopener,noreferrer');
     } else if (platform === 'whatsapp') {
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareTitle + ' ' + shareUrl)}`, '_blank', 'noopener,noreferrer');
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareUrl)}`, '_blank', 'noopener,noreferrer');
     } else if (platform === 'native') {
       if (navigator.share) {
         navigator.share({
