@@ -40,9 +40,18 @@ export async function generateMetadata(
   const cleanContent = sanitizeHtml(news.content || '', { allowedTags: [] });
   const description = cleanContent.length > 0 ? cleanContent.substring(0, 160) + '...' : 'Read the latest breaking news on RawWire.';
   
-  // Use post image if available, else fallback to site logo (this needs to be an absolute URL for social sites)
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rawwire.vercel.app';
-  const ogImage = news.mediaType === 'image' && news.mediaUrl ? news.mediaUrl : `${siteUrl}/logo.png`;
+  // WhatsApp and Twitter crawlers strictly require small JPG/PNG images and often fail on WEBP or large files.
+  // If the image is hosted on Cloudinary, we force it to be a 1200x630 compressed JPG.
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://raw-wire.vercel.app';
+  let ogImage = `${siteUrl}/logo.png`;
+  
+  if (news.mediaType === 'image' && news.mediaUrl) {
+    if (news.mediaUrl.includes('res.cloudinary.com')) {
+      ogImage = news.mediaUrl.replace('/upload/', '/upload/c_fill,w_1200,h_630,f_jpg,q_70/');
+    } else {
+      ogImage = news.mediaUrl;
+    }
+  }
 
   return {
     title: `${title} | RawWire`,
