@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://rawwire.vercel.app'),
   title: 'RawWire',
   description: 'Breaking News delivered fast.',
+  manifest: '/manifest.json',
   openGraph: {
     title: 'RawWire',
     description: 'Breaking News delivered fast.',
@@ -50,6 +51,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(
+                  function(registration) { console.log('ServiceWorker registration successful'); },
+                  function(err) { console.log('ServiceWorker registration failed: ', err); }
+                );
+              });
+            }
+          `
+        }} />
+      </head>
       <body className={`${inter.variable} antialiased font-sans min-h-screen flex justify-center bg-background text-foreground`}>
         <ThemeProvider>
           <SocketProvider>
