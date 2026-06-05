@@ -96,14 +96,6 @@ export default function NewsCard({ item }: { item: any }) {
             />
           </Link>
 
-                  {item.aiSummary.map((bullet: string, idx: number) => (
-                    <li key={idx} className="leading-snug">{bullet}</li>
-                  ))}
-                </ul>
-              </div>
-            </Link>
-          )}
-
           {/* Media Attachment */}
           {item.mediaUrl && (
             <Link href={`/news/${item._id}`} className="w-full relative rounded-2xl overflow-hidden border border-border bg-hover-bg mb-3 block">
