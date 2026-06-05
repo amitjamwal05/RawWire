@@ -7,7 +7,6 @@ const Analytics = require('../models/Analytics');
 const upload = require('../middleware/upload');
 const { protect } = require('../middleware/auth');
 const rateLimit = require('express-rate-limit');
-const { generateAiSummary } = require('../utils/ai');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -69,11 +68,6 @@ router.put('/news/:id/approve', async (req, res) => {
     
     news.isApproved = true;
     
-    // Generate AI Summary if not already generated
-    if (!news.aiSummary || news.aiSummary.length === 0) {
-      news.aiSummary = await generateAiSummary(news.content);
-    }
-    
     await news.save();
 
     // Broadcast to all clients
@@ -109,15 +103,12 @@ router.post('/news', upload.single('media'), async (req, res) => {
     let mediaType = 'image';
     if (req.file && req.file.mimetype.startsWith('video/')) mediaType = 'video';
     
-    const aiSummary = await generateAiSummary(content);
-
     const news = await News.create({
       title,
       content,
       category: category || 'General',
       mediaUrl: req.file ? req.file.path : null,
-      mediaType,
-      aiSummary
+      mediaType
     });
 
     // Broadcast to all clients
@@ -150,12 +141,7 @@ router.put('/news/:id', upload.single('media'), async (req, res) => {
       news.mediaType = req.file.mimetype.startsWith('video/') ? 'video' : 'image';
     }
 
-    // Regenerate AI Summary if content changed or if it doesn't exist
-    if (content && (!news.aiSummary || news.aiSummary.length === 0 || news.content !== content)) {
-      news.aiSummary = await generateAiSummary(content);
-    }
-
-    const updatedNews = await news.save();
+    await news.save();
 
     if (req.app.get('io')) {
       if (views !== undefined && views !== '') req.app.get('io').emit('view_count_changed', { newsId: news._id.toString(), views: news.views });
