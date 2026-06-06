@@ -4,19 +4,22 @@ import Image from 'next/image';
 import { Home, ShieldAlert, Moon, Sun, Feather, PenTool, Plus } from 'lucide-react';
 import { MdVerified } from 'react-icons/md';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';import { usePathname } from 'next/navigation';
 
 export default function Sidebar() {
   const { theme, setTheme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
     if (localStorage.getItem('adminToken')) {
       setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
     }
-  }, []);
+  }, [pathname]);
 
   const currentTheme = theme === 'system' ? systemTheme : theme;
 
