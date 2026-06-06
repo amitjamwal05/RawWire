@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Play, Square, Pause } from 'lucide-react';
 
 export default function TextToSpeech({ text, title }: { text: string; title: string }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isSupported, setIsSupported] = useState(true);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   useEffect(() => {
     if (!('speechSynthesis' in window)) {
@@ -35,21 +36,39 @@ export default function TextToSpeech({ text, title }: { text: string; title: str
       window.speechSynthesis.cancel();
       
       const cleanText = text.replace(/<[^>]+>/g, ''); // Strip HTML if any
-      const utterance = new SpeechSynthesisUtterance(`${title}. ${cleanText}`);
+      const fullText = `${title}. ${cleanText}`;
+      
+      // We don't chunk it manually here, but we apply a keep-alive interval
+      // because Chrome on Windows has a bug where it stops playing after 15 seconds.
+      const utterance = new SpeechSynthesisUtterance(fullText);
+      utteranceRef.current = utterance;
       
       utterance.onend = () => {
         setIsPlaying(false);
         setIsPaused(false);
+        clearInterval(timer);
       };
       
-      utterance.onerror = () => {
+      utterance.onerror = (e) => {
+        console.error("SpeechSynthesis error:", e);
         setIsPlaying(false);
         setIsPaused(false);
+        clearInterval(timer);
       };
 
       window.speechSynthesis.speak(utterance);
       setIsPlaying(true);
       setIsPaused(false);
+
+      // Windows Chrome Keep-Alive Hack
+      const timer = setInterval(() => {
+        if (!window.speechSynthesis.paused && window.speechSynthesis.speaking) {
+          window.speechSynthesis.pause();
+          window.speechSynthesis.resume();
+        } else if (!window.speechSynthesis.speaking) {
+          clearInterval(timer);
+        }
+      }, 14000);
     }
   };
 
