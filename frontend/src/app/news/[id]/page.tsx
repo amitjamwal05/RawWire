@@ -9,6 +9,7 @@ import LikeButton from '@/components/LikeButton';
 import Link from 'next/link';
 import { getApiUrl } from '@/lib/api';
 import sanitizeHtml from 'sanitize-html';
+import ClientDate from '@/components/ClientDate';
 import LiveViewCounter from '@/components/LiveViewCounter';
 import WeatherWidget from '@/components/WeatherWidget';
 import { Metadata, ResolvingMetadata } from 'next';
