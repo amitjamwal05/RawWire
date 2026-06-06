@@ -148,7 +148,7 @@ router.put('/news/:id', upload.single('media'), async (req, res) => {
       if (upvotes !== undefined && upvotes !== '') req.app.get('io').emit('upvote_changed', { newsId: news._id.toString(), upvotes: news.upvotes });
     }
 
-    res.json(updatedNews);
+    res.json(news);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
