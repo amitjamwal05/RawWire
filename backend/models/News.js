@@ -12,15 +12,14 @@ const newsSchema = new mongoose.Schema({
   mediaUrl: {
     type: String,
   },
-  mediaType: {
-    type: String,
-    enum: ['image', 'video'],
-    default: 'image'
-  },
-  category: {
-    type: String,
-    default: 'General'
-  },
+  mediaType: { type: String, enum: ['image', 'video'], required: false },
+  category: { type: String, required: true },
+  comments: [{
+    text: { type: String, required: true },
+    author: { type: String, required: true },
+    avatarUrl: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
+  }],
   views: {
     type: Number,
     default: 0
