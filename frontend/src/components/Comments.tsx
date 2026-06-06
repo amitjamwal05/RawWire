@@ -122,7 +122,7 @@ export default function Comments({ newsId, initialComments = [] }: CommentsProps
             <div key={idx} className="flex gap-3">
               <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-accent/10 border border-border">
                 {comment.avatarUrl ? (
-                  <Image src={comment.avatarUrl} alt={comment.author} fill className="object-cover" />
+                  <img src={comment.avatarUrl} alt={comment.author} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-accent"><User size={20} /></div>
                 )}
@@ -143,7 +143,7 @@ export default function Comments({ newsId, initialComments = [] }: CommentsProps
       <form onSubmit={handleSubmit} className="flex gap-3 items-end">
         <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-accent/10 border border-border hidden sm:block">
           {guestProfile && (
-            <Image src={guestProfile.avatar} alt="You" fill className="object-cover" />
+            <img src={guestProfile.avatar} alt="You" className="w-full h-full object-cover" />
           )}
         </div>
         <div className="flex-1 relative">
