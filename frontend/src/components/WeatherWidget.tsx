@@ -18,13 +18,13 @@ export default function WeatherWidget({ compact = false }: { compact?: boolean }
 
     const fetchFallbackWeather = async () => {
       try {
-        const lat = 40.7128;
-        const lon = -74.0060;
+        const lat = 31.1048;
+        const lon = 77.1665;
         const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
         const weatherData = await weatherRes.json();
         
         cachedWeather = weatherData.current_weather;
-        cachedLocation = 'New York (Fallback)';
+        cachedLocation = 'Himachal';
         
         setWeather(cachedWeather);
         setLocation(cachedLocation as string);
