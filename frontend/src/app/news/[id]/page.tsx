@@ -9,11 +9,8 @@ import LikeButton from '@/components/LikeButton';
 import Link from 'next/link';
 import { getApiUrl } from '@/lib/api';
 import sanitizeHtml from 'sanitize-html';
-import ClientDate from '@/components/ClientDate';
 import LiveViewCounter from '@/components/LiveViewCounter';
 import WeatherWidget from '@/components/WeatherWidget';
-import TextToSpeech from '@/components/TextToSpeech';
-import Comments from '@/components/Comments';
 import { Metadata, ResolvingMetadata } from 'next';
 
 async function getNewsData(id: string) {
@@ -183,8 +180,6 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
         <div className="mb-4">
           {news.title && <h2 className="text-3xl font-extrabold mb-4 leading-tight break-words">{news.title}</h2>}
           
-          <TextToSpeech title={news.title || 'RawWire News'} text={news.content || ''} />
-
           <div 
             className="prose prose-lg dark:prose-invert max-w-none break-words"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml((news.content || '').replace(/&nbsp;/g, ' ')) }}
@@ -225,9 +220,6 @@ export default async function NewsDetail({ params }: { params: Promise<{ id: str
         </div>
 
         <hr className="border-border w-full" />
-
-        {/* Comments Section */}
-        <Comments newsId={news._id} initialComments={news.comments} />
       </div>
     </div>
   );

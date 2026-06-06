@@ -109,32 +109,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Add Comment
-router.post('/:id/comment', async (req, res) => {
-  try {
-    const { text, author, avatarUrl } = req.body;
-    if (!text || !author || !avatarUrl) {
-      return res.status(400).json({ message: 'Missing comment fields' });
-    }
-
-    const news = await News.findById(req.params.id);
-    if (!news) return res.status(404).json({ message: 'News not found' });
-
-    const newComment = { text, author, avatarUrl, createdAt: new Date() };
-    news.comments.push(newComment);
-    await news.save();
-
-    // Broadcast to connected clients so comments appear live
-    if (req.app.get('io')) {
-      req.app.get('io').emit('new_comment', { newsId: news._id.toString(), comment: newComment });
-    }
-
-    res.status(201).json(newComment);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
 // Increment views
 router.post('/view/:id', async (req, res) => {
   try {
