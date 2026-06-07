@@ -1,6 +1,6 @@
 'use client';
 
-import { BarChart2, Share, X } from 'lucide-react';
+import { BarChart2, Send, X } from 'lucide-react';
 import { FaXTwitter, FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa6';
 import toast from 'react-hot-toast';
 import LiveViewCounter from '@/components/LiveViewCounter';
@@ -64,7 +64,7 @@ export default function ShareButtons({ item, isDetail = false }: { item: any, is
   const iconSize = isDetail ? 22 : 18;
 
   return (
-    <div className={`flex ${isDetail ? 'justify-end py-3' : 'justify-between mt-1 max-w-md'} text-muted relative`} ref={menuRef}>
+    <div className={`flex ${isDetail ? 'justify-end py-3' : 'justify-between mt-1 w-full max-w-[200px]'} text-muted relative`} ref={menuRef}>
       {!isDetail && (
         <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="flex items-center gap-2 hover:text-blue-500 group transition-colors cursor-default">
           <div className="p-2 rounded-full group-hover:bg-blue-500/10"><BarChart2 size={iconSize} /></div>
@@ -72,22 +72,26 @@ export default function ShareButtons({ item, isDetail = false }: { item: any, is
         </button>
       )}
       
-      <button 
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          // If native share is supported, try using it directly instead of the popup menu.
-          // Native share opens the OS-level sheet with all apps (WhatsApp, Twitter, etc).
-          if (navigator.share) {
-            handleShare(e, 'native');
-          } else {
-            setShowMenu(!showMenu);
-          }
-        }} 
-        className="flex items-center gap-2 hover:text-blue-500 group transition-colors ml-auto"
-      >
-        <div className="p-2 rounded-full group-hover:bg-blue-500/10"><Share size={iconSize} /></div>
-      </button>
+      <div className="flex items-center gap-1 ml-auto">
+        <button onClick={(e) => handleShare(e, 'whatsapp')} className="flex items-center gap-2 hover:text-green-500 group transition-colors">
+          <div className="p-2 rounded-full group-hover:bg-green-500/10"><FaWhatsapp size={iconSize} /></div>
+        </button>
+
+        <button 
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (navigator.share) {
+              handleShare(e, 'native');
+            } else {
+              setShowMenu(!showMenu);
+            }
+          }} 
+          className="flex items-center gap-2 hover:text-blue-500 group transition-colors"
+        >
+          <div className="p-2 rounded-full group-hover:bg-blue-500/10"><Send size={iconSize} /></div>
+        </button>
+      </div>
 
       {showMenu && (
         <div className="absolute right-0 bottom-full mb-2 bg-[#1a1a1a] border border-border rounded-xl shadow-2xl p-2 flex gap-1 z-50 animate-in fade-in slide-in-from-bottom-2">
@@ -99,9 +103,6 @@ export default function ShareButtons({ item, isDetail = false }: { item: any, is
           </button>
           <button onClick={(e) => handleShare(e, 'instagram')} className="p-3 hover:bg-pink-600/20 rounded-lg text-pink-500 transition-colors">
             <FaInstagram size={20} />
-          </button>
-          <button onClick={(e) => handleShare(e, 'whatsapp')} className="p-3 hover:bg-green-500/20 rounded-lg text-green-500 transition-colors">
-            <FaWhatsapp size={20} />
           </button>
           <button onClick={(e) => { setShowMenu(false); e.preventDefault(); e.stopPropagation(); }} className="p-3 hover:bg-red-500/20 rounded-lg text-red-500 transition-colors ml-2 border-l border-border pl-4">
             <X size={20} />
