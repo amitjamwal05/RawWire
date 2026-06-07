@@ -44,7 +44,7 @@ export default function ShareButtons({ item, isDetail = false }: { item: any, is
     } else if (platform === 'whatsapp') {
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareTitle + '\\n\\n' + shareUrl)}`, '_blank', 'noopener,noreferrer');
     } else if (platform === 'native') {
-      if (navigator.share) {
+      if (typeof navigator.share === 'function') {
         navigator.share({
           title: 'RawWire News',
           text: shareTitle,
@@ -81,7 +81,7 @@ export default function ShareButtons({ item, isDetail = false }: { item: any, is
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (navigator.share) {
+            if (typeof navigator.share === 'function') {
               handleShare(e, 'native');
             } else {
               setShowMenu(!showMenu);
