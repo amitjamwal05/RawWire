@@ -42,12 +42,10 @@ export default function ShareButtons({ item, isDetail = false }: { item: any, is
     } else if (platform === 'facebook') {
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank', 'noopener,noreferrer');
     } else if (platform === 'whatsapp') {
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareTitle + '\n\n' + shareUrl)}`, '_blank', 'noopener,noreferrer');
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareUrl)}`, '_blank', 'noopener,noreferrer');
     } else if (platform === 'native') {
       if (typeof navigator.share === 'function') {
         navigator.share({
-          title: 'RawWire News',
-          text: shareTitle,
           url: shareUrl
         }).catch(console.error);
       } else {
